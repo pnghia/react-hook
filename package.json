@@ -5,7 +5,18 @@
   "dependencies": {
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
-    "react-scripts": "2.1.5"
+    "react-scripts": "2.1.5",
+    "ramda": "^0.26.1",
+    "react-final-form-hooks": "1.0.0-alpha.1",
+    "final-form": "4.10.0",
+    "joi": "^14.3.1",
+    "moment": "^2.24.0",
+    "@material-ui/core": "^3.9.2",
+    "@material-ui/icons": "^3.0.2",
+    "axios": "^0.18.0",
+    "react-router-dom": "^4.3.1",
+    "store": "^2.0.12",
+    "react-spinners": "^0.5.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -21,5 +32,14 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-prettier": "^4.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-prettier": "^3.0.1",
+    "eslint-plugin-react": "^7.12.4",
+    "prettier": "^1.16.4"
+  }
 }
