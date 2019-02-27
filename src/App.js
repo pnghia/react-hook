@@ -6,7 +6,7 @@ import {
   // Redirect
 } from "react-router-dom";
 import Login from 'feature/login';
-// import Home from 'feature/home';
+import Home from 'feature/home';
 // import http from 'service/http';
 import './App.css';
 
@@ -14,6 +14,8 @@ const Auth = () => (
   <Router>
     <div>
       <Route path="/login" component={Login} />
+      {/* <Route path="/home" component={Home} /> */}
+      <Route path="/" component={Home} />
       {/* <PrivateRoute path="/protected" component={Home} /> */}
     </div>
   </Router>

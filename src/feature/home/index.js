@@ -1,117 +1,102 @@
-import React from 'react'
-import { reduce } from 'ramda'
-import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
-import Avatar from '@material-ui/core/Avatar'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import FormControl from '@material-ui/core/FormControl'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-import Paper from '@material-ui/core/Paper'
+import React, { useState, useEffect } from 'react'
+import { makeStyles } from '@material-ui/styles'
+import SwipeableViews from 'react-swipeable-views'
+import AppBar from '@material-ui/core/AppBar'
 import Typography from '@material-ui/core/Typography'
-import withStyles from '@material-ui/core/styles/withStyles'
-import { useForm, useField } from 'react-final-form-hooks'
-import Joi from "joi"
+import Toolbar from '@material-ui/core/Toolbar'
+import IconButton from '@material-ui/core/IconButton'
+import MenuIcon from '@material-ui/icons/Menu'
+import ShopingCartIcon from '@material-ui/icons/ShoppingCart'
+import Badge from '@material-ui/core/Badge'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
 import http from 'service/http'
-import { PropagateLoader } from 'react-spinners'
+import Offers from 'component/offers'
+import Restaurants from 'component/restaurants'
+import TabContainer from 'component/tab'
 import useLoading from '../loading/hook'
-import useAuth from '../auth/hook'
+import customStyle from './style'
+// import useAuth from '../auth/hook'
 
+const useStyles = makeStyles(customStyle);
 
-function Login({ classes }) {
-  const [ loading, withLoading ] = useLoading(false);
-  const [, setAuth] = useAuth(false);
-  const onSubmit = async payload => {
-    const token = await withLoading(() => http.post({ path: 'login', payload }))
-    http.setJwtToken(token)
-    setAuth(token)
+function home() {
+  const classes = useStyles();
+  const [offers, updateOffers] = useState([])
+  const [restaurants, updateRestaurants] = useState([])
+  const [ , withLoading ] = useLoading(false)
+  // const [auth] = useAuth(false)
+  const [tabSelected, updateTabSelected] = React.useState(0);
+
+  function handleChangeTab(event, newValue) {
+    updateTabSelected(newValue);
   }
 
-  const schema = Joi.object().keys({
-    password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required(),
-    email: Joi.string().email({ minDomainAtoms: 2 }).required()
-  })
-
-  const validate = values => {
-    return Joi.validate(values, schema, err => { 
-      if(!err) {
-        return {}
-      }
-      const generateErr = (accumulator, { message, path : [name] }) => {
-        return {
-          ...accumulator,
-          [name]: message
-        }
-      }
-      const error = reduce(generateErr, {}, err.details)
-      return error
-    });
+  function handleChangeTabIndex(index) {
+    updateTabSelected(index);
   }
 
-  const { form, handleSubmit, submitting } = useForm({
-    onSubmit,
-    validate
-  })
+  const fetchData = async() => {
+    const [{ data: { data: offersResp } }, { data: { data: restaurantsResp } }] = await withLoading(() => Promise.all([
+      http.get({ path: 'offer'}),
+      http.get({ path: 'store/search'})
+    ]))
+    updateOffers(offersResp)
+    updateRestaurants(restaurantsResp)
+  }
 
-  const email = useField('email', form)
-  const password = useField('password', form)
+  useEffect(
+    () => {
+      fetchData()
+    },
+    []
+  )
 
   return (
-    <div className={classes.main}>
-      <CssBaseline />
-      <Paper className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <form onSubmit={handleSubmit} className={classes.form}>
-          <FormControl margin="normal" required fullWidth>
-            <TextField
-              {...email.input}
-              label="Email"
-              fullWidth
-            />
-            {email.meta.touched && email.meta.error && <div className={classes.error}>{email.meta.error}</div>}
-          </FormControl>
-          <FormControl margin="normal" required fullWidth>
-            <TextField
-              {...password.input}
-              label="Password"
-              fullWidth
-            />
-            {password.meta.touched && password.meta.error && <div className={classes.error}>{password.meta.error}</div>}
-          </FormControl>
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          { loading ? 
-            <div style={{display: 'flex', justifyContent: 'center', margin: 15}}>
-              <PropagateLoader
-                sizeUnit="px"
-                size={20}
-                color="#f50057"
-                loading={loading}
-              />
-            </div>
-            : <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              disabled={submitting}
-              className={classes.submit}
-            >
-              Sign in
-            </Button>
-          }
-        </form>
-      </Paper>
+    <div className={classes.root}>
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" color="inherit" className={classes.grow}>
+            Home
+          </Typography>
+          <div>
+            <IconButton color="inherit">
+              <Badge badgeContent={4} color="secondary">
+                <ShopingCartIcon />
+              </Badge>
+            </IconButton>
+          </div>
+        </Toolbar>
+      </AppBar>
+      <AppBar position="static" color="default">
+        <Tabs
+          value={tabSelected}
+          onChange={handleChangeTab}
+          indicatorColor="primary"
+          textColor="primary"
+          variant="fullWidth"
+          centered
+        >
+          <Tab label="OFFER" />
+          <Tab label="RESTAURANT" />
+        </Tabs>
+      </AppBar>
+      <SwipeableViews
+        index={tabSelected}
+        onChangeIndex={handleChangeTabIndex}
+      >
+        <TabContainer>
+          <Offers offers={offers} />
+        </TabContainer>
+        <TabContainer>
+          <Restaurants restaurants={restaurants} />
+        </TabContainer>
+      </SwipeableViews>
     </div>
-  )
+  );
 }
 
-export default withStyles(styles)(Login)
+export default home;
