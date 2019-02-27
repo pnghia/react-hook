@@ -1,51 +1,24 @@
-/* eslint-disable react/no-array-index-key */
 import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import SwipeableViews from 'react-swipeable-views'
 import AppBar from '@material-ui/core/AppBar'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-import Avatar from '@material-ui/core/Avatar'
 import Typography from '@material-ui/core/Typography'
 import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import ShopingCartIcon from '@material-ui/icons/ShoppingCart'
-import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart'
 import Badge from '@material-ui/core/Badge'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
-import numeral from 'numeral'
 import http from 'service/http'
+import Offers from 'component/offers'
+import Restaurants from 'component/restaurants'
+import TabContainer from 'component/tab'
 import useLoading from '../loading/hook'
+import customStyle from './style'
 // import useAuth from '../auth/hook'
 
-function TabContainer({ children, dir }) {
-  return (
-    <Typography component="div" dir={dir} style={{ padding: 8 * 3 }}>
-      {children}
-    </Typography>
-  );
-}
-
-const useStyles = makeStyles({
-  root: {
-    flexGrow: 1,
-  },
-  grow: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
-  },
-  tab: {
-    flexGrow: 1,
-  },
-});
+const useStyles = makeStyles(customStyle);
 
 function home() {
   const classes = useStyles();
@@ -95,7 +68,6 @@ function home() {
                 <ShopingCartIcon />
               </Badge>
             </IconButton>
-            
           </div>
         </Toolbar>
       </AppBar>
@@ -117,53 +89,10 @@ function home() {
         onChangeIndex={handleChangeTabIndex}
       >
         <TabContainer>
-          <List>
-            {offers.map(({storeName, description, price, picture, id}) => (<ListItem key={id} alignItems="flex-start">
-              <ListItemAvatar>
-                <Avatar alt="Remy Sharp" src={`https://carflatf.com/images/s_${picture}`} />
-              </ListItemAvatar>
-              <ListItemText
-                primary={storeName}
-                secondary={
-                  <React.Fragment>
-                    <Typography component="span" color="textPrimary">
-                      {description}
-                    </Typography>
-                      ${numeral(price).format('0,0')}
-                  </React.Fragment>
-                }
-              />
-              <ListItemSecondaryAction>
-                <IconButton aria-label="Comments">
-                  <AddShoppingCartIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>))}
-          </List>
+          <Offers offers={offers} />
         </TabContainer>
         <TabContainer>
-        <List>
-            {restaurants.map(({name, address, menu}, index) => (<ListItem key={index} alignItems="flex-start">
-              <ListItemAvatar>
-                <Avatar alt="Remy Sharp" src={`https://carflatf.com/images/s_${menu}`} />
-              </ListItemAvatar>
-              <ListItemText
-                primary={name}
-                secondary={
-                  <React.Fragment>
-                    <Typography component="span" color="textPrimary">
-                      {address.formatted_address}
-                    </Typography>
-                  </React.Fragment>
-                }
-              />
-              <ListItemSecondaryAction>
-                <IconButton aria-label="Comments">
-                  <AddShoppingCartIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>))}
-          </List>
+          <Restaurants restaurants={restaurants} />
         </TabContainer>
       </SwipeableViews>
     </div>
