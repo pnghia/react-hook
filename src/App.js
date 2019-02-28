@@ -1,42 +1,46 @@
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import {
   BrowserRouter as Router,
   Route,
-  // Link,
-  // Redirect
 } from "react-router-dom";
 import Login from 'feature/login';
 import Home from 'feature/home';
-// import http from 'service/http';
 import './App.css';
 
-const Auth = () => (
+// then our route config
+const routes = [
+  {
+    path: "/login",
+    component: Login
+  },
+  {
+    path: "/home",
+    component: Home
+  }
+];
+
+const App = () => (
   <Router>
     <div>
-      <Route path="/login" component={Login} />
-      {/* <Route path="/home" component={Home} /> */}
-      <Route path="/" component={Home} />
-      {/* <PrivateRoute path="/protected" component={Home} /> */}
+      {routes.map((route, i) => (
+          <RouteWithSubRoutes key={i} {...route} />
+      ))}
     </div>
   </Router>
 );
 
-// const PrivateRoute = ({ component: Component, ...rest }) => (
-//   <Route
-//     {...rest}
-//     render={props =>
-//       http.setJwtToken() ? (
-//         <Component {...props} />
-//       ) : (
-//         <Redirect
-//           to={{
-//             pathname: "/login",
-//             state: { from: props.location }
-//           }}
-//         />
-//       )
-//     }
-//   />
-// );
 
-export default Auth;
+function RouteWithSubRoutes(route) {
+  return (
+    <Route
+      path={route.path}
+      render={props => (
+        // pass the sub-routes down to keep nesting
+        <route.component {...props} routes={route.routes} />
+      )}
+    />
+  );
+}
+
+export default App;

@@ -11,7 +11,8 @@ import IconButton from '@material-ui/core/IconButton'
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart'
 import numeral from 'numeral'
 
-function offerList({offers}) {
+
+function offerList({offers, updateCarts, carts}) {
   return (
     <List>
       {map(({storeName, description, price, picture, id}) => (
@@ -31,7 +32,9 @@ function offerList({offers}) {
           }
         />
         <ListItemSecondaryAction>
-          <IconButton aria-label="Comments">
+          <IconButton onClick={() => updateCarts([...carts,
+            {storeName, description, price, picture, id}
+          ])} aria-label="Comments">
             <AddShoppingCartIcon />
           </IconButton>
         </ListItemSecondaryAction>
