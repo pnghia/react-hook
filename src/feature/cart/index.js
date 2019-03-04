@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import {
   Typography,
@@ -7,30 +7,28 @@ import {
   IconButton,
   Drawer,
   Badge,
-  Tabs,
-  Tab,
   ListItemIcon,
   ListItemText,
   ListItem,
   Divider,
-  List
+  List,
+  ListItemAvatar,
+  ListItemSecondaryAction,
+  Avatar,Fab
 } from '@material-ui/core'
 
 import MenuIcon from '@material-ui/icons/Menu'
 import {
   ShoppingCart as ShopingCartIcon,
   Mail as MailIcon,
-  MoveToInbox as InboxIcon
+  MoveToInbox as InboxIcon,
+  Add as AddIcon,
+  Remove as RemoveIcon
 } from '@material-ui/icons'
 
+import numeral from 'numeral'
 import { propEq, map, findIndex } from 'ramda'
-
-import http from 'service/http'
-import Offers from 'component/offers'
-import Restaurants from 'component/restaurants'
-import TabContainer from 'component/tab'
 import useCarts from 'component/cart/hook'
-import useLoading from '../loading/hook'
 import customStyle from './style'
 
 // import useAuth from '../auth/hook'
@@ -38,25 +36,17 @@ import customStyle from './style'
 const useStyles = makeStyles(customStyle);
 
 function home({ history }) {
-  const classes = useStyles();
-  const [offers, updateOffers] = useState([]);
-  const [restaurants, updateRestaurants] = useState([]);
-  const [, withLoading] = useLoading(false);
+  const classes = useStyles()
   // const [auth] = useAuth(false)
-  const [carts, updateCarts, getCartsAmount] = useCarts();
-  const [tabSelected, updateTabSelected] = useState(0);
-  const [drawer, toggleDrawer] = useState(false);
-
-  function handleChangeTab(event, newValue) {
-    updateTabSelected(newValue);
-  }
+  const [carts, updateCarts, getCartsAmount] = useCarts()
+  const [drawer, toggleDrawer] = useState(false)
 
   async function addToCarts (id) {
     const withId = propEq('id', id)
     const findIndexInCards = findIndex(withId)
     const indexCart = findIndexInCards(carts)
     if (indexCart === -1) {
-      const found = offers.find(item => item.id === id)
+      const found = carts.find(item => item.id === id)
       const newCarts = [...carts, { ...found, quantity: 1 }]
       updateCarts(newCarts)
       return;
@@ -75,31 +65,25 @@ function home({ history }) {
     updateCarts(newCarts)
   }
 
+  function removeFromCarts(id) {
+    const reduceIfExist = idOffer => item => {
+      if (item.id === idOffer) {
+        return {
+          ...item,
+          quantity: item.quantity - 1
+        }
+      }
+      return item;
+    }
+    const reduceIfExistInCards = map(reduceIfExist(id));
+    const newCarts = reduceIfExistInCards(carts)
+      .filter(({ quantity }) => quantity !== 0);
+    updateCarts(newCarts)
+  }
+
   const onToggleDrawer = status => () => {
     toggleDrawer(status);
   };
-
-  const fetchData = async () => {
-    const [
-      {
-        data: { data: offersResp }
-      },
-      {
-        data: { data: restaurantsResp }
-      }
-    ] = await withLoading(() =>
-      Promise.all([
-        http.get({ path: 'offer' }),
-        http.get({ path: 'store/search' })
-      ])
-    );
-    updateOffers(offersResp);
-    updateRestaurants(restaurantsResp);
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   function SideBar() {
     return (
@@ -141,7 +125,7 @@ function home({ history }) {
           <SideBar />
         </div>
       </Drawer>
-      <AppBar positionFixed>
+      <AppBar>
         <Toolbar>
           <IconButton
             onClick={onToggleDrawer(true)}
@@ -152,7 +136,7 @@ function home({ history }) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" color="inherit" className={classes.grow}>
-            Home
+            Cart
           </Typography>
           <div>
             <IconButton color="inherit" onClick={() => history.push('cart')}>
@@ -163,25 +147,51 @@ function home({ history }) {
           </div>
         </Toolbar>
       </AppBar>
-      <AppBar positionFixed style={{top: 56}} color="default">
-        <Tabs
-          value={tabSelected}
-          onChange={handleChangeTab}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="fullWidth"
-          centered
-        >
-          <Tab label="OFFER" />
-          <Tab label="RESTAURANT" />
-        </Tabs>
-      </AppBar>
-      <TabContainer>
-        { tabSelected === 0
-          ? <Offers offers={offers} addToCarts={addToCarts} />
-          : <Restaurants restaurants={restaurants} />
+      
+      <List style={{marginTop: 80}}>
+        { map(
+            ({ storeName, description, price, picture, id, quantity }) => (
+              <ListItem key={id} alignItems="flex-start">
+                <ListItemAvatar>
+                  <Avatar
+                    alt="Remy Sharp"
+                    src={`https://carflatf.com/images/s_${picture}`}
+                  />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={storeName}
+                  secondary={
+                    <React.Fragment>
+                      <Typography component="span" color="textPrimary">
+                        {description}
+                      </Typography>
+                      ${numeral(price).format('0,0')}
+                    </React.Fragment>
+                  }
+                />
+                <ListItemSecondaryAction>
+                  <Fab 
+                    onClick={() =>
+                      removeFromCarts(id)
+                    } color="secondary" size='small' aria-label="Add" className={classes.fab}>
+                    <RemoveIcon />
+                  </Fab>
+                  <span style={{margin: 8}}>{quantity}</span>
+                  <Fab 
+                    onClick={() =>
+                      addToCarts(id)
+                    } color="secondary" size='small' aria-label="Add" className={classes.fab}>
+                    <AddIcon />
+                  </Fab>
+                </ListItemSecondaryAction>
+              </ListItem>
+            ),
+            carts
+          )
         }
-      </TabContainer>
+      </List>
+      {/* <AppBar positionFixed style={{bottom: 0}} color="default">
+      </AppBar> */}
     </div>
   );
 }

@@ -13,7 +13,7 @@ import {
 import { AddShoppingCart as AddShoppingCartIcon } from '@material-ui/icons';
 import numeral from 'numeral';
 
-function offerList({ offers, updateCarts, carts }) {
+function offerList({ offers, addToCarts }) {
   return (
     <List>
       {map(
@@ -39,10 +39,7 @@ function offerList({ offers, updateCarts, carts }) {
             <ListItemSecondaryAction>
               <IconButton
                 onClick={() =>
-                  updateCarts([
-                    ...carts,
-                    { storeName, description, price, picture, id }
-                  ])
+                  addToCarts(id)
                 }
                 aria-label="Comments"
               >

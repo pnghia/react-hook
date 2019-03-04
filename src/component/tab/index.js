@@ -3,7 +3,7 @@ import { Typography } from '@material-ui/core';
 
 export default function({ children, dir }) {
   return (
-    <Typography component="div" dir={dir}>
+    <Typography component="div" dir={dir} style={{marginTop: 25}}>
       {children}
     </Typography>
   );

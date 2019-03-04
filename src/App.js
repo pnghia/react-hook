@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import Login from 'feature/login';
 import Home from 'feature/home';
+import Cart from 'feature/cart'
 import './App.css';
 
 // then our route config
@@ -17,6 +18,10 @@ const routes = [
   {
     path: "/home",
     component: Home
+  },
+  {
+    path: "/cart",
+    component: Cart
   }
 ];
 
