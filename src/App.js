@@ -7,6 +7,7 @@ import {
 import Login from 'feature/login';
 import Home from 'feature/home';
 import Cart from 'feature/cart'
+import CartReview from 'feature/cartReview'
 import './App.css';
 
 // then our route config
@@ -16,16 +17,16 @@ const routes = [
     component: Login
   },
   {
-    path: "/",
-    component: Home
-  },
-  {
     path: "/home",
     component: Home
   },
   {
     path: "/cart",
     component: Cart
+  },
+  {
+    path: "/cart-review",
+    component: CartReview
   }
 ];
 

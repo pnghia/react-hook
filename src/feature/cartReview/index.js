@@ -16,20 +16,22 @@ import {
   ListItemSecondaryAction,
   Avatar,
   Button,
-  Fab
+  Fab,
+  Grid,
+  Paper
 } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
 import {
   ShoppingCart as ShopingCartIcon,
   Mail as MailIcon,
   MoveToInbox as InboxIcon,
-  Add as AddIcon,
-  Remove as RemoveIcon
+  Motorcycle as MotorcycleIcon
 } from '@material-ui/icons'
 
 import numeral from 'numeral'
-import { propEq, map, findIndex } from 'ramda'
+import { map } from 'ramda'
 import useCarts from 'component/cart/hook'
+import moment from 'moment'
 import customStyle from './style'
 
 // import useAuth from '../auth/hook'
@@ -39,48 +41,8 @@ const useStyles = makeStyles(customStyle);
 function cart({ history }) {
   const classes = useStyles()
   // const [auth] = useAuth(false)
-  const [carts, updateCarts, getCartsAmount, priceCarts] = useCarts()
+  const [carts, , getCartsAmount, priceCarts, waiting] = useCarts()
   const [drawer, toggleDrawer] = useState(false)
-
-  async function addToCarts (id) {
-    const withId = propEq('id', id)
-    const findIndexInCards = findIndex(withId)
-    const indexCart = findIndexInCards(carts)
-    if (indexCart === -1) {
-      const found = carts.find(item => item.id === id)
-      const newCarts = [...carts, { ...found, quantity: 1 }]
-      updateCarts(newCarts)
-      return;
-    }
-    const increaseIfExist = idOffer => item => {
-      if (item.id === idOffer) {
-        return {
-          ...item,
-          quantity: item.quantity + 1
-        }
-      }
-      return item
-    }
-    const increaseIfExistInCards = map(increaseIfExist(id))
-    const newCarts = increaseIfExistInCards(carts)
-    updateCarts(newCarts)
-  }
-
-  function removeFromCarts(id) {
-    const reduceIfExist = idOffer => item => {
-      if (item.id === idOffer) {
-        return {
-          ...item,
-          quantity: item.quantity - 1
-        }
-      }
-      return item;
-    }
-    const reduceIfExistInCards = map(reduceIfExist(id));
-    const newCarts = reduceIfExistInCards(carts)
-      .filter(({ quantity }) => quantity !== 0);
-    updateCarts(newCarts)
-  }
 
   const onToggleDrawer = status => () => {
     toggleDrawer(status);
@@ -136,8 +98,8 @@ function cart({ history }) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
-            Cart
+          <Typography variant="h5" color="inherit" className={classes.grow}>
+            Cart Review
           </Typography>
           <div>
             <IconButton color="inherit" onClick={() => history.push('cart')}>
@@ -148,10 +110,37 @@ function cart({ history }) {
           </div>
         </Toolbar>
       </AppBar>
-      
-      <List style={{marginTop: 80}}>
+      <Grid container style={{marginTop: 80}}>
+        <Grid item xs={6} style={{textAlign: 'center'}}>
+          <Fab 
+            color="secondary" aria-label="Add">
+            <MotorcycleIcon />
+          </Fab>
+        </Grid>
+        <Grid item xs={6}>
+          <Paper elevation={1} style={{textAlign: 'center', padding: 15}}>
+            <Typography variant="h6" component="h6">
+              Delivery
+            </Typography>
+            <Typography component="p">
+              {moment().add(waiting, 'mins').format('YYYY-MM-DD hh:mm')}
+            </Typography>
+          </Paper>
+        </Grid>
+        <Grid item xs={12}>
+          <div elevation={1} style={{textAlign: 'center', padding: 15}}>
+            <Typography variant="h6" component="h6">
+              Estimated pick-up / Delivery:
+            </Typography>
+            <Typography component="p">
+              {moment().add(waiting, 'mins').format('hh:mm DD/MM/YY')}
+            </Typography>
+          </div>
+        </Grid>
+      </Grid>
+      <List>
         { map(
-            ({ storeName, description, price, picture, id, quantity }) => (
+            ({ storeName, description, price, picture, id }) => (
               <ListItem key={id} alignItems="flex-start">
                 <ListItemAvatar>
                   <Avatar
@@ -166,38 +155,32 @@ function cart({ history }) {
                       <Typography component="span" color="textPrimary">
                         {description}
                       </Typography>
-                      ${numeral(price).format('0,0')}
                     </React.Fragment>
                   }
                 />
                 <ListItemSecondaryAction>
-                  <Fab 
-                    onClick={() =>
-                      removeFromCarts(id)
-                    } color="secondary" size='small' aria-label="Add" className={classes.fab}>
-                    <RemoveIcon />
-                  </Fab>
-                  <span style={{margin: 8}}>{quantity}</span>
-                  <Fab 
-                    onClick={() =>
-                      addToCarts(id)
-                    } color="secondary" size='small' aria-label="Add" className={classes.fab}>
-                    <AddIcon />
-                  </Fab>
+                  <Typography component="span" color="textPrimary">
+                    ${numeral(price).format('0,0')}
+                  </Typography>
                 </ListItemSecondaryAction>
               </ListItem>
             ),
             carts
           )
         }
+        <ListItem style={{ display: 'block'}}>
+          <Typography component="h3" color="textSecondary" style={{float: 'right', color: '#f50057'}}>
+            Total: ${numeral(priceCarts).format('0,0')}
+          </Typography>
+        </ListItem>
       </List>
       <AppBar position="fixed" style={{bottom: 0, top: 'auto'}} color="default">
         <Toolbar className={classes.toolbar}>
-          <div>
-            <span>Total:  $ {numeral(priceCarts).format('0,0')}</span>
-          </div>
-          <Button variant="outlined" color="default" onClick={() => history.push('cart-review')}>
-            Payment
+          <Button variant="outlined" color="default">
+            Add Payment
+          </Button>
+          <Button variant="outlined" color="default">
+            Confirm
           </Button>
         </Toolbar>
       </AppBar>

@@ -1,5 +1,5 @@
-import React from 'react';
-import { map } from 'ramda';
+import React from 'react'
+import { map } from 'ramda'
 import {
   List,
   ListItem,
@@ -9,9 +9,9 @@ import {
   Avatar,
   Typography,
   IconButton
-} from '@material-ui/core';
-import { AddShoppingCart as AddShoppingCartIcon } from '@material-ui/icons';
-import numeral from 'numeral';
+} from '@material-ui/core'
+import { AddShoppingCart as AddShoppingCartIcon } from '@material-ui/icons'
+import numeral from 'numeral'
 
 function offerList({ offers, addToCarts }) {
   return (
