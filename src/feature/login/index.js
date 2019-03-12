@@ -11,6 +11,7 @@ import {
   Paper,
   Typography
 } from '@material-ui/core';
+import store from 'store'
 
 import { LockOutlined as LockOutlinedIcon } from '@material-ui/icons';
 
@@ -21,18 +22,18 @@ import http from 'service/http';
 import { PropagateLoader } from 'react-spinners';
 import styles from './style';
 import useLoading from '../loading/hook';
-import useAuth from '../auth/hook';
 
-function Login({ classes }) {
+function Login({ classes, history }) {
   const [loading, withLoading] = useLoading(false);
-  const [, setAuth] = useAuth(false);
 
   const onSubmit = async payload => {
-    const token = await withLoading(() =>
+    const { data: { data: { token, user } }} = await withLoading(() =>
       http.post({ path: 'login', payload })
     );
-    http.setJwtToken(token);
-    setAuth(token);
+    http.setJwtToken(token.token);
+    store.set('token', token)
+    store.set('user', user)
+    history.goBack()
   };
 
   const schema = Joi.object().keys({

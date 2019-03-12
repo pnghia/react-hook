@@ -8,19 +8,12 @@ import {
   Drawer,
   Badge,
   Tabs,
-  Tab,
-  ListItemIcon,
-  ListItemText,
-  ListItem,
-  Divider,
-  List
+  Tab
 } from '@material-ui/core'
 
 import MenuIcon from '@material-ui/icons/Menu'
 import {
-  ShoppingCart as ShopingCartIcon,
-  Mail as MailIcon,
-  MoveToInbox as InboxIcon
+  ShoppingCart as ShopingCartIcon
 } from '@material-ui/icons'
 
 import { propEq, map, findIndex } from 'ramda'
@@ -29,6 +22,7 @@ import http from 'service/http'
 import Offers from 'component/offers'
 import Restaurants from 'component/restaurants'
 import TabContainer from 'component/tab'
+import Sidebar from 'component/drawer'
 import useCarts from 'component/cart/hook'
 import useLoading from '../loading/hook'
 import customStyle from './style'
@@ -101,33 +95,6 @@ function home({ history }) {
     fetchData();
   }, []);
 
-  function SideBar() {
-    return (
-      <div className={classes.list}>
-        <List>
-          {['Feed', 'Categories', 'Orders', 'Payments'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {['Setting', 'Profile', 'Logout'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-      </div>
-    );
-  }
 
   return (
     <div className={classes.root}>
@@ -138,7 +105,7 @@ function home({ history }) {
           onClick={onToggleDrawer(false)}
           onKeyDown={onToggleDrawer(false)}
         >
-          <SideBar />
+          <Sidebar history={history} />
         </div>
       </Drawer>
       <AppBar positionFixed>
@@ -176,7 +143,7 @@ function home({ history }) {
           <Tab label="RESTAURANT" />
         </Tabs>
       </AppBar>
-      <TabContainer>
+      <TabContainer style={{marginTop: 100}}>
         { tabSelected === 0
           ? <Offers offers={offers} addToCarts={addToCarts} />
           : <Restaurants restaurants={restaurants} />

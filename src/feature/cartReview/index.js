@@ -12,9 +12,7 @@ import {
   ListItem,
   Divider,
   List,
-  ListItemAvatar,
   ListItemSecondaryAction,
-  Avatar,
   Button,
   Fab,
   Grid,
@@ -141,13 +139,12 @@ function cart({ history }) {
       <List>
         { map(
             ({ storeName, description, price, picture, id }) => (
-              <ListItem key={id} alignItems="flex-start">
-                <ListItemAvatar>
-                  <Avatar
-                    alt="Remy Sharp"
-                    src={`https://carflatf.com/images/s_${picture}`}
-                  />
-                </ListItemAvatar>
+              <ListItem key={id} alignItems="flex-start" style={{ borderBottom: 1, borderBottomColor: '#f5f5f5', borderBottomStyle: 'solid' }}>
+                <img
+                  style={{ width: 100, height: 100, borderRadius: 4 }}
+                  alt="Remy Sharp"
+                  src={`http://carflatf.com:7070/images/m_${picture}`}
+                />
                 <ListItemText
                   primary={storeName}
                   secondary={
