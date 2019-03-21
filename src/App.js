@@ -10,6 +10,7 @@ import Home from 'feature/home';
 import Cart from 'feature/cart'
 import CartReview from 'feature/cartReview'
 import Profile from 'feature/profile'
+import Register from 'feature/register';
 import http from 'service/http'
 import store from 'store'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
@@ -31,6 +32,7 @@ function AuthExample() {
       <Router>
         <div>
           <Route path="/login" component={Login} />
+          <Route path="/register" component={Register} />
           <PrivateRoute path="/home" component={Home} />
           <PrivateRoute path="/cart" component={Cart} />
           <PrivateRoute path="/cart-review" component={CartReview} />
