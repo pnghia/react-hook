@@ -23,7 +23,7 @@ import { map, isEmpty, findIndex, propEq } from 'ramda'
 
 import http from 'service/http'
 import store from 'store'
-import TabContainer from 'component/tab'
+// import TabContainer from 'component/tab'
 import Sidebar from 'component/drawer'
 import useCarts from 'component/cart/hook'
 import Offers from 'component/offers'
