@@ -33,7 +33,7 @@ function AuthExample() {
         <div>
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
-          <PrivateRoute path="/home" component={Home} />
+          <PrivateRoute exact path="/" component={Home} />
           <PrivateRoute path="/cart" component={Cart} />
           <PrivateRoute path="/cart-review" component={CartReview} />
           <PrivateRoute path="/profile" component={Profile} />
