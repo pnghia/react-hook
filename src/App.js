@@ -5,12 +5,18 @@ import {
   Route,
   Redirect
 } from "react-router-dom";
-import Login from 'feature/login';
-import Home from 'feature/home';
-import Cart from 'feature/cart'
-import CartReview from 'feature/cartReview'
-import Profile from 'feature/profile'
-import Register from 'feature/register';
+
+import {
+  Cart,
+  CartReview,
+  CategoryRestaurent,
+  Categories,
+  Home,
+  Profile,
+  Register,
+  Login,
+} from 'feature'
+
 import http from 'service/http'
 import store from 'store'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
@@ -20,10 +26,10 @@ import './App.css';
 const theme = createMuiTheme({
   palette: {
     primary: {
-        main: '#007DFE'
-      }
+      main: '#007DFE'
     }
-  },
+  }
+},
 )
 
 function AuthExample() {
@@ -33,9 +39,11 @@ function AuthExample() {
         <div>
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
-          <PrivateRoute exact path="/" component={Home} />
           <PrivateRoute path="/cart" component={Cart} />
           <PrivateRoute path="/cart-review" component={CartReview} />
+          <PrivateRoute path="/categories" component={Categories} />
+          <PrivateRoute path="/category/:id/restaurant/:categoryName" component={CategoryRestaurent} />
+          <PrivateRoute path="/home" component={Home} />
           <PrivateRoute path="/profile" component={Profile} />
         </div>
       </Router>
@@ -54,13 +62,13 @@ function PrivateRoute({ component: Component, ...rest }) {
         token ? (
           <Component {...props} />
         ) : (
-          <Redirect
-            to={{
-              pathname: "/login",
-              state: { from: props.location }
-            }}
-          />
-        )
+            <Redirect
+              to={{
+                pathname: "/login",
+                state: { from: props.location }
+              }}
+            />
+          )
       }
     />
   );

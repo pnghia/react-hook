@@ -108,7 +108,7 @@ function home({ history }) {
           <Sidebar history={history} />
         </div>
       </Drawer>
-      <AppBar positionFixed>
+      <AppBar position='fixed'>
         <Toolbar>
           <IconButton
             onClick={onToggleDrawer(true)}
@@ -130,7 +130,7 @@ function home({ history }) {
           </div>
         </Toolbar>
       </AppBar>
-      <AppBar positionFixed style={{top: 56}} color="default">
+      <AppBar position='fixed' style={{top: 56}} color="default">
         <Tabs
           value={tabSelected}
           onChange={handleChangeTab}
