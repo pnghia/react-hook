@@ -9,7 +9,7 @@ import {
   FormControlLabel,
   Checkbox,
   Paper,
-  Typography
+  Typography,
 } from '@material-ui/core';
 
 import { PersonAdd } from '@material-ui/icons';
@@ -34,11 +34,13 @@ function Register({ classes, history }) {
   const onSubmit = async ({ address, ...restPayload }) => {
     const { lat, lng } = await addressToLatLng(address)
     await withLoading(() =>
-      http.post({ path: 'user', payload: {
-        ...restPayload,
-        address: JSON.stringify({ formatted_address: address, location: { lat, lng } }),
-        roleId: 3
-      }})
+      http.post({
+        path: 'user', payload: {
+          ...restPayload,
+          address: JSON.stringify({ formatted_address: address, location: { lat, lng } }),
+          roleId: 3
+        }
+      })
     );
     history.goBack()
   };
@@ -160,7 +162,7 @@ function Register({ classes, history }) {
           </FormControl>
           <FormControlLabel
             checked={terms.input.value}
-            control={<Checkbox color="primary" />}            
+            control={<Checkbox color="primary" />}
             label="Terms & Policy"
             onChange={() => terms.input.onChange({ target: { value: !terms.input.value } })}
           />
@@ -190,6 +192,16 @@ function Register({ classes, history }) {
                 Register Eater
             </Button>
             )}
+            <Button
+                fullWidth
+                variant="outlined"
+                color="secondary"
+                className={classes.toLogin}
+                disabled={submitting}
+                onClick={() => history.push('/login')}
+              >
+                To Login Page
+            </Button>
         </form>
       </Paper>
     </div>

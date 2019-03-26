@@ -31,6 +31,9 @@ const styles = theme => ({
   submit: {
     marginTop: theme.spacing.unit * 3,
   },
+  toLogin: {
+    margin: '10px 0 0 0'
+  }
 });
 
 export default styles;
