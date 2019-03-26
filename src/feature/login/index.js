@@ -86,7 +86,7 @@ function Login({ classes, history }) {
             )}
           </FormControl>
           <FormControl margin="normal" required fullWidth>
-            <TextField {...password.input} label="Password" fullWidth />
+            <TextField {...password.input} type='password' label="Password" fullWidth />
             {password.meta.touched && password.meta.error && (
               <div className={classes.error}>{password.meta.error}</div>
             )}
