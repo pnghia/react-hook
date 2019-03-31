@@ -1,5 +1,6 @@
 import { useState } from "react"
 
+const ApiException = (message, status) => ({ message, status })
 
 function useLoading(status) {
   const [loading, setLoading] = useState(status)
@@ -10,10 +11,11 @@ function useLoading(status) {
       setLoading(false)
       return response
     } catch (error) {
+      const { response: { data: { message, status: errorCode } } } = error
       setLoading(false)
-      return error
+      throw new ApiException(message, errorCode)
     }
   }
-  return [ loading, withLoading ];
+  return [loading, withLoading];
 }
 export default useLoading;

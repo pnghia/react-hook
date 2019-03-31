@@ -8,7 +8,7 @@ function defaultImg(e) {
 }
 
 const renderCategory = ({ classes, handleOnClick }) => ({id, name}) => (
-    <GridListTile key={id} onClick={() => handleOnClick(id, name)} style={{ padding: 1 }}>
+    <GridListTile key={id} onClick={() => handleOnClick(id)} style={{ padding: 1 }}>
         <img src={`./static/${id}.jpg`} alt={name} onError={defaultImg}/>
         <GridListTileBar
             title={name}

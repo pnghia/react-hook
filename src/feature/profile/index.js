@@ -22,8 +22,6 @@ import {
 import { map, isEmpty, findIndex, propEq } from 'ramda'
 
 import http from 'service/http'
-import store from 'store'
-// import TabContainer from 'component/tab'
 import Sidebar from 'component/drawer'
 import useCarts from 'component/cart/hook'
 import Offers from 'component/offers'
@@ -32,7 +30,8 @@ import customStyle from './style'
 
 const useStyles = makeStyles(customStyle);
 
-function home({ history }) {
+function Profile({ history, match: {
+  params: { storeId } } }) {
   const classes = useStyles();
   const [offers, updateOffers] = useState([]);
   const [profile, updateProfile] = useState({});
@@ -42,7 +41,7 @@ function home({ history }) {
   const [drawer, toggleDrawer] = useState(false);
   const [carts, updateCarts] = useCarts();
 
-  async function addToCarts (id) {
+  async function addToCarts(id) {
     const withId = propEq('id', id)
     const findIndexInCards = findIndex(withId)
     const indexCart = findIndexInCards(carts)
@@ -75,7 +74,6 @@ function home({ history }) {
   };
 
   const fetchData = async () => {
-    const { storeId } = store.get('user')
     const [
       {
         data: { data: profileResp }
@@ -93,9 +91,9 @@ function home({ history }) {
         http.get({ path: 'store/menu', params: { storeId } })
       ])
     )
-    const tasks = map(({ id }) => 
+    const tasks = map(({ id }) =>
       http.get({ path: `dish?menuId=${id}` })
-    , menuResp);
+      , menuResp);
     const dishs = await withLoading(() => Promise.all(tasks))
     const menuNormalize = menuResp.map((item, index) => {
       const dish = dishs[index];
@@ -104,7 +102,6 @@ function home({ history }) {
         dish
       }
     }).filter(({ dish }) => dish)
-
     updateProfile(profileResp)
     updateOffers(offersResp)
     updatemenus(menuNormalize)
@@ -117,7 +114,6 @@ function home({ history }) {
   const {
     name, address, menu
   } = profile
-  
   return isEmpty(profile) ? null : (
     <div className={classes.root}>
       <Drawer open={drawer} onClose={onToggleDrawer(false)}>
@@ -150,11 +146,11 @@ function home({ history }) {
           </div>
         </Toolbar>
       </AppBar>
-      <Card className={classes.card} style={{marginTop: 56, borderRadius: 0}}>
+      <Card className={classes.card} style={{ marginTop: 56, borderRadius: 0 }}>
         <div className={classes.details}>
           <CardContent className={classes.content}>
             <Typography component="p" variant="title">
-              <span style={{fontWeight: 'bold'}}>{name}</span>
+              <span style={{ fontWeight: 'bold' }}>{name}</span>
             </Typography>
             <Typography variant="subtitle1" color="textSecondary">
               {address.formatted_address}
@@ -163,7 +159,7 @@ function home({ history }) {
         </div>
         <CardMedia
           className={classes.cover}
-          style={{width: 160}}
+          style={{ width: 160 }}
           image={`http://carflatf.com:7070/images/m_${menu}`}
           title="Live from space album cover"
         />
@@ -174,10 +170,9 @@ function home({ history }) {
         indicatorColor="primary"
         textColor="primary"
         variant="scrollable"
-        centered
       >
         <Tab label="OFFER" />
-        {menus.map(({ id, name: tabName } ) =>
+        {menus.map(({ id, name: tabName }) =>
           <Tab key={id} label={tabName} />
         )}
       </Tabs>
@@ -188,4 +183,4 @@ function home({ history }) {
   );
 }
 
-export default home;
+export default Profile;

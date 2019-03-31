@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { reduce } from 'ramda';
 import {
   Button,
@@ -20,20 +20,27 @@ import { useForm, useField } from 'react-final-form-hooks';
 import Joi from 'joi';
 import http from 'service/http';
 import { PropagateLoader } from 'react-spinners';
+import Snackbar from 'component/snackbar'
 import styles from './style';
 import useLoading from '../loading/hook';
 
 function Login({ classes, history }) {
   const [loading, withLoading] = useLoading(false);
-
+  const [snackbarError, setSnackbarError] = useState(false)
+  const [snackbarErrorMessage, setSnackbarErrorMessage] = useState('')
   const onSubmit = async payload => {
-    const { data: { data: { token, user } }} = await withLoading(() =>
-      http.post({ path: 'login', payload })
-    );
-    http.setJwtToken(token.token);
-    store.set('token', token)
-    store.set('user', user)
-    history.goBack()
+    try {
+      const { data: { data: { token, user } } } = await withLoading(() =>
+        http.post({ path: 'login', payload })
+      );
+      http.setJwtToken(token.token);
+      store.set('token', token)
+      store.set('user', user)
+      history.goBack()
+    } catch (error) {
+      setSnackbarErrorMessage(error.message);
+      setSnackbarError(true);
+    }
   };
 
   const schema = Joi.object().keys({
@@ -107,18 +114,34 @@ function Login({ classes, history }) {
               />
             </div>
           ) : (
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              disabled={submitting}
-              className={classes.submit}
-            >
-              Sign in
-            </Button>
-          )}
+              <React.Fragment>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="outlined"
+                  color="primary"
+                  disabled={submitting}
+                  className={classes.submit}
+                >
+                  Sign in
+                </Button>
+                <Button 
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit} 
+                  fullWidth
+                  onClick={() => history.push('/register')}
+                >
+                  Sign up
+                </Button>
+              </React.Fragment>
+            )}
         </form>
+        <Snackbar.error
+          isOpen={snackbarError}
+          handleClose={() => setSnackbarError(false)}
+          message={snackbarErrorMessage}
+        />
       </Paper>
     </div>
   );

@@ -6,24 +6,14 @@ const styles = theme => ({
     overflow: 'hidden',
     backgroundColor: theme.palette.background.paper,
   },
-  MuiList: {
+  MuiGrid: {
     [theme.breakpoints.down('sm')]: {
-      marginTop: 29
+      margin: '55px 0px 0px 0px'
     },
     [theme.breakpoints.up('sm')]: {
-      marginTop: 36
+      marginTop: 63
     }
-  },
-  MuiListItemIcon: {
-    marginRight: 0
-  },
-  MuiListItem: {
-    padding: '20px 0'
-  },
-  media: {
-    // ⚠️ object-fit is not supported by IE 11.
-    objectFit: 'cover',
-  },
+  }
 });
 
 export default styles;
