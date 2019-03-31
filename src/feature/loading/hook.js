@@ -11,9 +11,9 @@ function useLoading(status) {
       setLoading(false)
       return response
     } catch (error) {
-      const { response: { data: { message, status } } } = error
+      const { response: { data: { message, status: errorCode } } } = error
       setLoading(false)
-      throw new ApiException(message, status)
+      throw new ApiException(message, errorCode)
     }
   }
   return [loading, withLoading];
