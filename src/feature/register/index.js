@@ -19,9 +19,9 @@ import Joi from 'joi';
 import http from 'service/http';
 import { PropagateLoader } from 'react-spinners';
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
-import styles from './style';
+import AutoSuggestPlace from 'component/autoSuggestPlace';
 import useLoading from '../loading/hook';
-import AutoSuggestPlace from './components/autoSuggestPlace';
+import styles from './style';
 
 function Register({ classes, history }) {
   const [loading, withLoading] = useLoading(false);

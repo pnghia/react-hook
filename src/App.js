@@ -9,12 +9,12 @@ import {
 import {
   Cart,
   CartReview,
-  CategoryRestaurent,
   Categories,
   Home,
   Profile,
   Register,
   Login,
+  Setting
 } from 'feature'
 
 import http from 'service/http'
@@ -42,9 +42,9 @@ function AuthExample() {
           <PrivateRoute path="/cart" component={Cart} />
           <PrivateRoute path="/cart-review" component={CartReview} />
           <PrivateRoute path="/categories" component={Categories} />
-          <PrivateRoute path="/category/:id/restaurant/:categoryName" component={CategoryRestaurent} />
           <PrivateRoute path="/home" component={Home} />
-          <PrivateRoute path="/profile" component={Profile} />
+          <PrivateRoute path="/profile/:storeId" component={Profile} />
+          <PrivateRoute path="/setting" component={Setting} />
         </div>
       </Router>
     </MuiThemeProvider>

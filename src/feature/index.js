@@ -1,6 +1,6 @@
 import Cart from 'feature/cart'
 import CartReview from 'feature/cartReview'
-import CategoryRestaurent from 'feature/categoryRestaurant'
+import Setting from 'feature/setting'
 import Categories from 'feature/categories'
 import Home from 'feature/home'
 import Login from 'feature/login'
@@ -11,7 +11,7 @@ import Register from 'feature/register'
 export {
     Cart,
     CartReview,
-    CategoryRestaurent,
+    Setting,
     Categories,
     Home,
     Profile,
