@@ -42,7 +42,7 @@ function Register({ classes, history }) {
         }
       })
     );
-    history.goBack()
+    history.push('/register-success')
   };
   const errorMessageHandler = ([err]) => {
     if (err.type === 'any.required') {

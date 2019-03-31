@@ -10,8 +10,6 @@ import {
   ExpansionPanel,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
-  // Snackbar,
-  // Button
 } from '@material-ui/core';
 import { ArrowBack, ExpandMore } from '@material-ui/icons';
 import Snackbar from 'component/snackbar'

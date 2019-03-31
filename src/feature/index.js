@@ -6,6 +6,7 @@ import Home from 'feature/home'
 import Login from 'feature/login'
 import Profile from 'feature/profile'
 import Register from 'feature/register'
+import RegistrationSuccessfully from 'feature/registrationSuccessfully'
 
 
 export {
@@ -17,4 +18,5 @@ export {
     Profile,
     Register,
     Login,
+    RegistrationSuccessfully
 }

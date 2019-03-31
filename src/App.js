@@ -14,7 +14,8 @@ import {
   Profile,
   Register,
   Login,
-  Setting
+  Setting,
+  RegistrationSuccessfully
 } from 'feature'
 
 import http from 'service/http'
@@ -39,6 +40,7 @@ function AuthExample() {
         <div>
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
+          <Route path="/register-success"  component={RegistrationSuccessfully} />
           <PrivateRoute path="/cart" component={Cart} />
           <PrivateRoute path="/cart-review" component={CartReview} />
           <PrivateRoute path="/categories" component={Categories} />
