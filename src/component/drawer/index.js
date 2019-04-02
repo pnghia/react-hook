@@ -6,14 +6,15 @@ import {
   ListItemIcon,
   ListItemText
 } from '@material-ui/core'
+import store from 'store'
 
 import { map } from 'ramda'
-import { PermIdentity, Category, RssFeed, PlaylistAddCheck, Payment, Notifications, SentimentDissatisfied } from '@material-ui/icons'
+import { Category, RssFeed, PlaylistAddCheck, Payment, Notifications, SentimentDissatisfied } from '@material-ui/icons'
 
 const topSidebar = [
   {
     title: 'Feed',
-    route: 'feed',
+    route: '/',
     icon: <RssFeed />
   },
   {
@@ -23,12 +24,12 @@ const topSidebar = [
   },
   {
     title: 'Orders',
-    route: 'orders',
+    route: 'cart',
     icon: <PlaylistAddCheck />
   },
   {
     title: 'Payments',
-    route: 'payments',
+    route: 'cart-review',
     icon: <Payment />
   }
 ]
@@ -38,16 +39,6 @@ const bottomSidebar = [
     title: 'Setting',
     route: 'setting',
     icon: <Notifications />
-  },
-  {
-    title: 'Profile',
-    route: 'profile',
-    icon: <PermIdentity />
-  },
-  {
-    title: 'Logout',
-    route: 'orders',
-    icon: <SentimentDissatisfied />
   }
 ]
 
@@ -74,6 +65,12 @@ function sideList({ history }) {
             <ListItemText primary={title} />
           </ListItem>
         ), bottomSidebar)}
+        <ListItem button onClick={() => { history.push('/'); store.clearAll()}}>
+          <ListItemIcon>
+            <SentimentDissatisfied />
+          </ListItemIcon>
+          <ListItemText primary="Log out" />
+        </ListItem>
       </List>
     </div>
   );
