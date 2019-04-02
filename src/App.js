@@ -10,6 +10,7 @@ import {
   Cart,
   CartReview,
   Categories,
+  Category,
   Home,
   Profile,
   Register,
@@ -46,7 +47,7 @@ function AuthExample() {
           <PrivateRoute path="/categories" component={Categories} />
           <PrivateRoute path="/home" component={Home} />
           <PrivateRoute exact path="/" component={Home} />
-          <PrivateRoute path="/profile/:storeId" component={Profile} />
+          <PrivateRoute path="/category/:categoryId" component={Category} />
           <PrivateRoute path="/setting" component={Setting} />
         </div>
       </Router>

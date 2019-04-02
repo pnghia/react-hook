@@ -23,7 +23,7 @@ function Categories({ history, classes }) {
   const onToggleDrawer = status => () => {
     toggleDrawer(status);
   };
-  const handleOnClickCategory = categoryId => history.push(`/profile/${categoryId}`)
+  const handleOnClickCategory = categoryId => history.push(`/category/${categoryId}`)
   const fetchData = async () => {
     const { data: { data } } = await withLoading(() => http.get({ path: 'lookup', params: { type: 'category' } }));
       setCategories(data)

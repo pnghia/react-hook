@@ -26,7 +26,7 @@ function restaurantList({ restaurants }) {
           secondary={
             <React.Fragment>
               <Typography component="span" color="textPrimary">
-                {address.formatted_address}
+                {address ? address.formatted_address : 'fuckkkk'}
               </Typography>
             </React.Fragment>
           }
