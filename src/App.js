@@ -45,7 +45,7 @@ function AuthExample() {
           <PrivateRoute path="/cart-review" component={CartReview} />
           <PrivateRoute path="/categories" component={Categories} />
           <PrivateRoute path="/home" component={Home} />
-          <PrivateRoute path="/" component={Home} />
+          <PrivateRoute exact path="/" component={Home} />
           <PrivateRoute path="/profile/:storeId" component={Profile} />
           <PrivateRoute path="/setting" component={Setting} />
         </div>
