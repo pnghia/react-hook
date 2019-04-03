@@ -1,2 +1,8 @@
 {
+  "path-intellisense.mappings": {
+    "/": "${workspaceRoot}",
+    "src": "${workspaceRoot}/src",
+    "component": "${workspaceRoot}/src/component",
+    "feature": "${workspaceRoot}/src/feature"
+  }
 }

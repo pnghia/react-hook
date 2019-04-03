@@ -7,10 +7,8 @@ import {
   IconButton,
   Drawer,
   Badge,
-  ListItemIcon,
   ListItemText,
   ListItem,
-  Divider,
   List,
   ListItemSecondaryAction,
   Button,
@@ -19,8 +17,6 @@ import {
 import MenuIcon from '@material-ui/icons/Menu'
 import {
   ShoppingCart as ShopingCartIcon,
-  Mail as MailIcon,
-  MoveToInbox as InboxIcon,
   Add as AddIcon,
   Remove as RemoveIcon
 } from '@material-ui/icons'
@@ -28,11 +24,13 @@ import {
 import numeral from 'numeral'
 import { propEq, map, findIndex } from 'ramda'
 import useCarts from 'component/cart/hook'
+import Sidebar from 'component/drawer'
+import Header from 'component/header'
 import customStyle from './style'
 
 // import useAuth from '../auth/hook'
 
-const useStyles = makeStyles(customStyle);
+const useStyles = makeStyles(customStyle)
 
 function cart({ history }) {
   const classes = useStyles()
@@ -40,7 +38,7 @@ function cart({ history }) {
   const [carts, updateCarts, getCartsAmount, priceCarts] = useCarts()
   const [drawer, toggleDrawer] = useState(false)
 
-  async function addToCarts (id) {
+  async function addToCarts(id) {
     const withId = propEq('id', id)
     const findIndexInCards = findIndex(withId)
     const indexCart = findIndexInCards(carts)
@@ -48,7 +46,7 @@ function cart({ history }) {
       const found = carts.find(item => item.id === id)
       const newCarts = [...carts, { ...found, quantity: 1 }]
       updateCarts(newCarts)
-      return;
+      return
     }
     const increaseIfExist = idOffer => item => {
       if (item.id === idOffer) {
@@ -72,44 +70,17 @@ function cart({ history }) {
           quantity: item.quantity - 1
         }
       }
-      return item;
+      return item
     }
-    const reduceIfExistInCards = map(reduceIfExist(id));
-    const newCarts = reduceIfExistInCards(carts)
-      .filter(({ quantity }) => quantity !== 0);
+    const reduceIfExistInCards = map(reduceIfExist(id))
+    const newCarts = reduceIfExistInCards(carts).filter(
+      ({ quantity }) => quantity !== 0
+    )
     updateCarts(newCarts)
   }
 
   const onToggleDrawer = status => () => {
-    toggleDrawer(status);
-  };
-
-  function SideBar() {
-    return (
-      <div className={classes.list}>
-        <List>
-          {['Feed', 'Categories', 'Orders', 'Payments'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {['Setting', 'Profile', 'Logout'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-      </div>
-    );
+    toggleDrawer(status)
   }
 
   return (
@@ -121,7 +92,7 @@ function cart({ history }) {
           onClick={onToggleDrawer(false)}
           onKeyDown={onToggleDrawer(false)}
         >
-          <SideBar />
+          <Sidebar history={history} />
         </div>
       </Drawer>
       <AppBar position="fixed">
@@ -134,9 +105,10 @@ function cart({ history }) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
-            Cart
-          </Typography>
+          <Header 
+            string='Cart'
+            classes={classes}
+          />
           <div>
             <IconButton color="inherit" onClick={() => history.push('cart')}>
               <Badge badgeContent={getCartsAmount()} color="secondary">
@@ -146,60 +118,81 @@ function cart({ history }) {
           </div>
         </Toolbar>
       </AppBar>
-      
-      <List style={{marginTop: 80}}>
-        { map(
-            ({ storeName, description, price, picture, id, quantity }) => (
-              <ListItem key={id} alignItems="flex-start" style={{ borderBottom: 1, borderBottomColor: '#f5f5f5', borderBottomStyle: 'solid' }}>
-                <img
-                  style={{ width: 100, height: 100, borderRadius: 4 }}
-                  alt="Remy Sharp"
-                  src={`http://carflatf.com:7070/images/m_${picture}`}
-                />
-                <ListItemText
-                  primary={storeName}
-                  secondary={
-                    <React.Fragment>
-                      <Typography component="span" color="textPrimary">
-                        {description}
-                      </Typography>
-                      ${numeral(price).format('0,0')}
-                    </React.Fragment>
-                  }
-                />
-                <ListItemSecondaryAction>
-                  <Fab 
-                    onClick={() =>
-                      removeFromCarts(id)
-                    } color="secondary" size='small' aria-label="Add" className={classes.fab}>
-                    <RemoveIcon />
-                  </Fab>
-                  <span style={{margin: 8}}>{quantity}</span>
-                  <Fab 
-                    onClick={() =>
-                      addToCarts(id)
-                    } color="secondary" size='small' aria-label="Add" className={classes.fab}>
-                    <AddIcon />
-                  </Fab>
-                </ListItemSecondaryAction>
-              </ListItem>
-            ),
-            carts
-          )
-        }
+
+      <List style={{ marginTop: 80 }}>
+        {map(
+          ({ storeName, description, price, picture, id, quantity }) => (
+            <ListItem
+              key={id}
+              alignItems="flex-start"
+              style={{
+                borderBottom: 1,
+                borderBottomColor: '#f5f5f5',
+                borderBottomStyle: 'solid'
+              }}
+            >
+              <img
+                style={{ width: 100, height: 100, borderRadius: 4 }}
+                alt="Remy Sharp"
+                src={`http://carflatf.com:7070/images/m_${picture}`}
+              />
+              <ListItemText
+                primary={storeName}
+                secondary={
+                  <React.Fragment>
+                    <Typography component="span" color="textPrimary">
+                      {description}
+                    </Typography>
+                    ${numeral(price).format('0,0')}
+                  </React.Fragment>
+                }
+              />
+              <ListItemSecondaryAction>
+                <Fab
+                  onClick={() => removeFromCarts(id)}
+                  color="secondary"
+                  size="small"
+                  aria-label="Add"
+                  className={classes.fab}
+                >
+                  <RemoveIcon />
+                </Fab>
+                <span style={{ margin: 8 }}>{quantity}</span>
+                <Fab
+                  onClick={() => addToCarts(id)}
+                  color="secondary"
+                  size="small"
+                  aria-label="Add"
+                  className={classes.fab}
+                >
+                  <AddIcon />
+                </Fab>
+              </ListItemSecondaryAction>
+            </ListItem>
+          ),
+          carts
+        )}
       </List>
-      <AppBar position="fixed" style={{bottom: 0, top: 'auto'}} color="default">
+      <AppBar
+        position="fixed"
+        style={{ bottom: 0, top: 'auto' }}
+        color="default"
+      >
         <Toolbar className={classes.toolbar}>
           <div>
-            <span>Total:  $ {numeral(priceCarts).format('0,0')}</span>
+            <span>Total: $ {numeral(priceCarts).format('0,0')}</span>
           </div>
-          <Button variant="outlined" color="default" onClick={() => history.push('cart-review')}>
+          <Button
+            variant="outlined"
+            color="default"
+            onClick={() => history.push('cart-review')}
+          >
             Payment
           </Button>
         </Toolbar>
       </AppBar>
     </div>
-  );
+  )
 }
 
-export default cart;
+export default cart

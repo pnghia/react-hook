@@ -19,17 +19,17 @@ const topSidebar = [
   },
   {
     title: 'Categories',
-    route: 'categories',
+    route: '/categories',
     icon: <Category />
   },
   {
     title: 'Orders',
-    route: 'cart',
+    route: '/cart',
     icon: <PlaylistAddCheck />
   },
   {
     title: 'Payments',
-    route: 'cart-review',
+    route: '/cart-review',
     icon: <Payment />
   }
 ]

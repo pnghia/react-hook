@@ -9,7 +9,6 @@ import {
   FormControlLabel,
   Checkbox,
   Paper,
-  Typography
 } from '@material-ui/core';
 import store from 'store'
 
@@ -21,6 +20,7 @@ import Joi from 'joi';
 import http from 'service/http';
 import { PropagateLoader } from 'react-spinners';
 import Snackbar from 'component/snackbar'
+import Header from 'component/header'
 import styles from './style';
 import useLoading from '../loading/hook';
 
@@ -36,7 +36,7 @@ function Login({ classes, history }) {
       http.setJwtToken(token.token);
       store.set('token', token)
       store.set('user', user)
-      history.goBack()
+      history.push('/home')
     } catch (error) {
       setSnackbarErrorMessage(error.message);
       setSnackbarError(true);
@@ -82,9 +82,10 @@ function Login({ classes, history }) {
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
+        <Header 
+            string='Sign in'
+            classes={classes}
+          />
         <form onSubmit={handleSubmit} className={classes.form}>
           <FormControl margin="normal" required fullWidth>
             <TextField {...email.input} label="Email" fullWidth />

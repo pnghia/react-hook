@@ -7,10 +7,8 @@ import {
   IconButton,
   Drawer,
   Badge,
-  ListItemIcon,
   ListItemText,
   ListItem,
-  Divider,
   List,
   ListItemSecondaryAction,
   Button,
@@ -21,14 +19,14 @@ import {
 import MenuIcon from '@material-ui/icons/Menu'
 import {
   ShoppingCart as ShopingCartIcon,
-  Mail as MailIcon,
-  MoveToInbox as InboxIcon,
   Motorcycle as MotorcycleIcon
 } from '@material-ui/icons'
 
 import numeral from 'numeral'
 import { map } from 'ramda'
 import useCarts from 'component/cart/hook'
+import Sidebar from 'component/drawer'
+import Header from "component/header";
 import moment from 'moment'
 import customStyle from './style'
 
@@ -46,34 +44,6 @@ function cart({ history }) {
     toggleDrawer(status);
   };
 
-  function SideBar() {
-    return (
-      <div className={classes.list}>
-        <List>
-          {['Feed', 'Categories', 'Orders', 'Payments'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {['Setting', 'Profile', 'Logout'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-      </div>
-    );
-  }
-
   return (
     <div className={classes.root}>
       <Drawer open={drawer} onClose={onToggleDrawer(false)}>
@@ -83,7 +53,7 @@ function cart({ history }) {
           onClick={onToggleDrawer(false)}
           onKeyDown={onToggleDrawer(false)}
         >
-          <SideBar />
+          <Sidebar history={history} />
         </div>
       </Drawer>
       <AppBar position="fixed">
@@ -96,9 +66,10 @@ function cart({ history }) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h5" color="inherit" className={classes.grow}>
-            Cart Review
-          </Typography>
+          <Header 
+            string='Cart Review'
+            classes={classes}
+          />
           <div>
             <IconButton color="inherit" onClick={() => history.push('cart')}>
               <Badge badgeContent={getCartsAmount()} color="secondary">

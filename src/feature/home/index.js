@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import {
-  Typography,
   AppBar,
   Toolbar,
   IconButton,
@@ -24,6 +23,7 @@ import Restaurants from 'component/restaurants'
 import TabContainer from 'component/tab'
 import Sidebar from 'component/drawer'
 import useCarts from 'component/cart/hook'
+import Header from 'component/header'
 import useLoading from '../loading/hook'
 import customStyle from './style'
 
@@ -118,9 +118,10 @@ function home({ history }) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
-            Home
-          </Typography>
+          <Header 
+            string='Home'
+            classes={classes}
+          />
           <div>
             <IconButton color="inherit" onClick={() => history.push('cart')}>
               <Badge badgeContent={getCartsAmount()} color="secondary">

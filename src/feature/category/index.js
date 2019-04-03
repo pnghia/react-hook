@@ -11,15 +11,15 @@ import {
   ListItem,
   ListItemText,
   ListItemAvatar,
-  Avatar,
+  Avatar
 } from '@material-ui/core';
-import TabContainer from 'component/tab'
-import { Menu as MenuIcon, PermIdentity } from '@material-ui/icons';
+import TabContainer from 'component/tab';
+import { Menu as MenuIcon } from '@material-ui/icons';
 import http from 'service/http';
 import Sidebar from 'component/drawer';
+import Header from 'component/header';
 import useLoading from '../loading/hook';
 import customStyle from './style';
-
 
 const useStyles = makeStyles(customStyle);
 
@@ -34,16 +34,17 @@ function Profile({
   const [, withLoading] = useLoading(false);
   const [drawer, toggleDrawer] = useState(false);
 
-
   const onToggleDrawer = status => () => {
     toggleDrawer(status);
   };
 
   const fetchData = async () => {
     const {
-        data: { data: resResp }
-    } = await withLoading(() => http.get({ path: `store/search?CategoryId=${categoryId}` }));
-    
+      data: { data: resResp }
+    } = await withLoading(() =>
+      http.get({ path: `store/search?CategoryId=${categoryId}` })
+    );
+
     updateresList(resResp);
   };
 
@@ -74,29 +75,31 @@ function Profile({
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" color="inherit" className={classes.grow}>
-              CATEGORY
-            </Typography>
+            <Header string="Category" classes={classes} />
           </Toolbar>
         </AppBar>
-        <TabContainer style={{marginTop: 100}}>
+        <TabContainer style={{ marginTop: 100 }}>
           <List>
-            {resList.map(({name, address, menu}, index) => (
-            <ListItem key={index} alignItems="flex-start">
-              <ListItemAvatar>
-                <Avatar alt="Remy Sharp" src={`https://carflatf.com/images/s_${menu}`} />
-              </ListItemAvatar>
-              <ListItemText
-                primary={name}
-                secondary={
-                  <React.Fragment>
-                    <Typography component="span" color="textPrimary">
-                      {address ? address.formatted_address : 'fuckkkk'}
-                    </Typography>
-                  </React.Fragment>
-                }
-              />
-            </ListItem>))}
+            {resList.map(({ name, address, menu }, index) => (
+              <ListItem key={index} alignItems="flex-start">
+                <ListItemAvatar>
+                  <Avatar
+                    alt="Remy Sharp"
+                    src={`https://carflatf.com/images/s_${menu}`}
+                  />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={name}
+                  secondary={
+                    <React.Fragment>
+                      <Typography component="span" color="textPrimary">
+                        {address ? address.formatted_address : 'fuckkkk'}
+                      </Typography>
+                    </React.Fragment>
+                  }
+                />
+              </ListItem>
+            ))}
           </List>
         </TabContainer>
       </div>
