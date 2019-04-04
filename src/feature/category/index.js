@@ -80,8 +80,8 @@ function Profile({
         </AppBar>
         <TabContainer style={{ marginTop: 100 }}>
           <List>
-            {resList.map(({ name, address, menu }, index) => (
-              <ListItem key={index} alignItems="flex-start">
+            {resList.map(({ name, address, menu, id}, index) => (
+              <ListItem key={index} alignItems="flex-start" onClick={() => history.push(`/profile/${id}`)}>
                 <ListItemAvatar>
                   <Avatar
                     alt="Remy Sharp"

@@ -16,7 +16,7 @@ import {
 
 import { Menu as MenuIcon, PermIdentity } from '@material-ui/icons';
 
-import { map, isEmpty, findIndex, propEq } from 'ramda';
+import { map, findIndex, propEq } from 'ramda';
 
 import http from 'service/http';
 import Sidebar from 'component/drawer';
@@ -32,12 +32,12 @@ const useStyles = makeStyles(customStyle);
 function Profile({
   history,
   match: {
-    params: { storeId }
+    params: { profileId }
   }
 }) {
   const classes = useStyles();
   const [offers, updateOffers] = useState([]);
-  const [profile, updateProfile] = useState({});
+  const [profile, updateProfile] = useState({address: {}});
   const [menus, updatemenus] = useState([]);
   const [, withLoading] = useLoading(false);
   const [tabSelected, updateTabSelected] = useState(0);
@@ -80,7 +80,7 @@ function Profile({
   const fetchData = async () => {
     const [
       {
-        data: { data: profileResp }
+        data: { data: [profileResp] }
       },
       {
         data: { data: offersResp }
@@ -90,9 +90,9 @@ function Profile({
       }
     ] = await withLoading(() =>
       Promise.all([
-        http.get({ path: 'store' }),
-        http.get({ path: 'offer' }),
-        http.get({ path: 'store/menu', params: { storeId } })
+        http.get({ path: `store/search?id=${profileId}` }),
+        http.get({ path: `offer?storeId=${profileId}` }),
+        http.get({ path: `store/menu?storeId=${profileId}`})
       ])
     );
     const tasks = map(
@@ -109,137 +109,96 @@ function Profile({
         };
       })
       .filter(({ dish }) => dish);
-    const allData = [profileResp, offersResp, menuNormalize];
-    const allDataAvailable = allData.every(i => Array.isArray(i) && i.length);
-    if (!allDataAvailable) {
-      setWarningSnackbar(true);
-    } else {
-      updateProfile(profileResp);
-      updateOffers(offersResp);
-      updatemenus(menuNormalize);
-    }
+    // const allData = [profileResp, offersResp, menuNormalize];
+    // const allDataAvailable = allData.every(i => Array.isArray(i) && i.length);
+    // if (!allDataAvailable) {
+    //   setWarningSnackbar(true);
+    // } else {
+    //   updateProfile(profileResp);
+    //   updateOffers(offersResp);
+    //   updatemenus(menuNormalize);
+    // }
+    updateProfile(profileResp);
+    updateOffers(offersResp);
+    updatemenus(menuNormalize);
   };
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  const renderData = () => {
-    if (!isEmpty(profile)) {
-      const { name, address, menu } = profile;
-      return (
-        <div className={classes.root}>
-          <Drawer open={drawer} onClose={onToggleDrawer(false)}>
-            <div
-              tabIndex={0}
-              role="button"
-              onClick={onToggleDrawer(false)}
-              onKeyDown={onToggleDrawer(false)}
-            >
-              <Sidebar history={history} />
-            </div>
-          </Drawer>
-          <AppBar position="fixed">
-            <Toolbar>
-              <IconButton
-                onClick={onToggleDrawer(true)}
-                className={classes.menuButton}
-                color="inherit"
-                aria-label="Menu"
-              >
-                <MenuIcon />
-              </IconButton>
-              <Header 
-            string='Profile'
-            classes={classes}
-          />
-              <div>
-                <IconButton color="inherit">
-                  <PermIdentity />
-                </IconButton>
-              </div>
-            </Toolbar>
-          </AppBar>
-          <Card
-            className={classes.card}
-            style={{ marginTop: 56, borderRadius: 0 }}
-          >
-            <div className={classes.details}>
-              <CardContent className={classes.content}>
-                <Typography component="p" variant="title">
-                  <span style={{ fontWeight: 'bold' }}>{name}</span>
-                </Typography>
-                <Typography variant="subtitle1" color="textSecondary">
-                  {address.formatted_address}
-                </Typography>
-              </CardContent>
-            </div>
-            <CardMedia
-              className={classes.cover}
-              style={{ width: 160 }}
-              image={`http://carflatf.com:7070/images/m_${menu}`}
-              title="Live from space album cover"
-            />
-          </Card>
-          <Tabs
-            value={tabSelected}
-            onChange={handleChangeTab}
-            indicatorColor="primary"
-            textColor="primary"
-            variant="scrollable"
-          >
-            <Tab label="OFFER" />
-            {menus.map(({ id, name: tabName }) => (
-              <Tab key={id} label={tabName} />
-            ))}
-          </Tabs>
-          <Typography component="div">
-            <Offers offers={offers} addToCarts={addToCarts} />
-          </Typography>
+  const { name, address, menu } = profile;
+  return (
+    <div className={classes.root}>
+      <Drawer open={drawer} onClose={onToggleDrawer(false)}>
+        <div
+          tabIndex={0}
+          role="button"
+          onClick={onToggleDrawer(false)}
+          onKeyDown={onToggleDrawer(false)}
+        >
+          <Sidebar history={history} />
         </div>
-      );
-    }
-    return (
-      <div className={classes.root}>
-        <Drawer open={drawer} onClose={onToggleDrawer(false)}>
-          <div
-            tabIndex={0}
-            role="button"
-            onClick={onToggleDrawer(false)}
-            onKeyDown={onToggleDrawer(false)}
+      </Drawer>
+      <AppBar position="fixed">
+        <Toolbar>
+          <IconButton
+            onClick={onToggleDrawer(true)}
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="Menu"
           >
-            <Sidebar history={history} />
-          </div>
-        </Drawer>
-        <AppBar position="fixed">
-          <Toolbar>
-            <IconButton
-              onClick={onToggleDrawer(true)}
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="Menu"
-            >
-              <MenuIcon />
+            <MenuIcon />
+          </IconButton>
+          <Header 
+        string='Profile'
+        classes={classes}
+      />
+          <div>
+            <IconButton color="inherit">
+              <PermIdentity />
             </IconButton>
-            <Typography variant="h6" color="inherit" className={classes.grow}>
-              Profile
+          </div>
+        </Toolbar>
+      </AppBar>
+      <Card
+        className={classes.card}
+        style={{ marginTop: 56, borderRadius: 0 }}
+      >
+        <div className={classes.details}>
+          <CardContent className={classes.content}>
+            <Typography component="p" variant="title">
+              <span style={{ fontWeight: 'bold' }}>{name}</span>
             </Typography>
-            <div>
-              <IconButton color="inherit">
-                <PermIdentity />
-              </IconButton>
-            </div>
-          </Toolbar>
-        </AppBar>
-        <Snackbar.warning
-          isOpen={warningSnackbar}
-          handleClose={() => setWarningSnackbar(false)}
+            <Typography variant="subtitle1" color="textSecondary">
+              {address.formatted_address}
+            </Typography>
+          </CardContent>
+        </div>
+        <CardMedia
+          className={classes.cover}
+          style={{ width: 160 }}
+          image={`http://carflatf.com:7070/images/m_${menu}`}
+          title="Live from space album cover"
         />
-      </div>
-    );
-  };
-
-  return renderData();
+      </Card>
+      <Tabs
+        value={tabSelected}
+        onChange={handleChangeTab}
+        indicatorColor="primary"
+        textColor="primary"
+        variant="scrollable"
+      >
+        <Tab label="OFFER" />
+        {menus.map(({ id, name: tabName }) => (
+          <Tab key={id} label={tabName} />
+        ))}
+      </Tabs>
+      <Typography component="div">
+        <Offers offers={offers} addToCarts={addToCarts} />
+      </Typography>
+    </div>
+  );
 }
 
 export default Profile;

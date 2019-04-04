@@ -13,11 +13,11 @@ import {
 
 import { AddShoppingCart as AddShoppingCartIcon } from '@material-ui/icons'
 
-function restaurantList({ restaurants }) {
+function restaurantList({ restaurants, history }) {
   return (
     <List>
-      {restaurants.map(({name, address, menu}, index) => (
-      <ListItem key={index} alignItems="flex-start">
+      {restaurants.map(({name, address, menu, id}, index) => (
+      <ListItem key={index} alignItems="flex-start" onClick={() => history.push(`profile/${id}`)}>
         <ListItemAvatar>
           <Avatar alt="Remy Sharp" src={`https://carflatf.com/images/s_${menu}`} />
         </ListItemAvatar>
