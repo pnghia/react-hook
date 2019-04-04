@@ -1,3 +1,3 @@
 export default {
-  baseUrl: 'http://carflatf.com:7070/api',
+  baseUrl: 'https://carflatf.com/api',
 };
