@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import {
-  Typography,
   AppBar,
   Toolbar,
   IconButton,
@@ -13,6 +12,7 @@ import MenuIcon from '@material-ui/icons/Menu'
 import http from 'service/http'
 import CategoriesItem from 'component/categories'
 import Sidebar from 'component/drawer'
+import Header from 'component/header'
 import useLoading from '../loading/hook'
 import styles from './style'
 
@@ -55,9 +55,10 @@ function Categories({ history, classes }) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
-            Categories
-          </Typography>
+          <Header 
+            string='Categories'
+            classes={classes}
+          />
         </Toolbar>
       </AppBar>
       <CategoriesItem

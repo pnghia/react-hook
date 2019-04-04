@@ -13,6 +13,7 @@ import {
 } from '@material-ui/core';
 import { ArrowBack, ExpandMore } from '@material-ui/icons';
 import Snackbar from 'component/snackbar'
+import Header from 'component/header'
 import UserSettingForm from './settingUserForm';
 import ChangePasswordForm from './changePasswordForm';
 import styles from './style';
@@ -33,9 +34,10 @@ function Setting({ history, classes }) {
           >
             <ArrowBack />
           </IconButton>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
-            Settings
-          </Typography>
+          <Header 
+            string='Settings'
+            classes={classes}
+          />
         </Toolbar>
       </AppBar>
       <Grid container className={classes.MuiGrid} spacing={0}>
@@ -47,7 +49,11 @@ function Setting({ history, classes }) {
               </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <UserSettingForm />
+              <UserSettingForm 
+                toggleSnackbarSuccess={setSnackbarSuccess}
+                toggleSnackbarError={setSnackbarError}
+                snackbarErrorMessage={setSnackbarErrorMessage}
+              />
             </ExpansionPanelDetails>
           </ExpansionPanel>
           <ExpansionPanel>

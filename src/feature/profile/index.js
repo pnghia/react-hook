@@ -23,6 +23,7 @@ import Sidebar from 'component/drawer';
 import useCarts from 'component/cart/hook';
 import Offers from 'component/offers';
 import Snackbar from 'component/snackbar';
+import Header from 'component/header'
 import useLoading from '../loading/hook';
 import customStyle from './style';
 
@@ -148,9 +149,10 @@ function Profile({
               >
                 <MenuIcon />
               </IconButton>
-              <Typography variant="h6" color="inherit" className={classes.grow}>
-                Profile
-              </Typography>
+              <Header 
+            string='Profile'
+            classes={classes}
+          />
               <div>
                 <IconButton color="inherit">
                   <PermIdentity />

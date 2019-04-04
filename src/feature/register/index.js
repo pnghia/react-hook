@@ -9,7 +9,6 @@ import {
   FormControlLabel,
   Checkbox,
   Paper,
-  Typography,
 } from '@material-ui/core';
 
 import { PersonAdd } from '@material-ui/icons';
@@ -20,6 +19,7 @@ import http from 'service/http';
 import { PropagateLoader } from 'react-spinners';
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
 import AutoSuggestPlace from 'component/autoSuggestPlace';
+import Header from 'component/header'
 import useLoading from '../loading/hook';
 import styles from './style';
 
@@ -117,9 +117,10 @@ function Register({ classes, history }) {
         <Avatar className={classes.avatar}>
           <PersonAdd />
         </Avatar>
-        <Typography component="h1" variant="h5">
-          Register
-        </Typography>
+        <Header 
+            string='Register'
+            classes={classes}
+          />
         <form onSubmit={handleSubmit} className={classes.form}>
           <FormControl margin="normal" required fullWidth>
             <TextField {...firstName.input} label="First Name" fullWidth />
