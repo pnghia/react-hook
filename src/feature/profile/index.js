@@ -22,7 +22,6 @@ import http from 'service/http';
 import Sidebar from 'component/drawer';
 import useCarts from 'component/cart/hook';
 import Offers from 'component/offers';
-import Snackbar from 'component/snackbar';
 import Header from 'component/header'
 import useLoading from '../loading/hook';
 import customStyle from './style';
@@ -42,7 +41,6 @@ function Profile({
   const [, withLoading] = useLoading(false);
   const [tabSelected, updateTabSelected] = useState(0);
   const [drawer, toggleDrawer] = useState(false);
-  const [warningSnackbar, setWarningSnackbar] = useState(false);
   const [carts, updateCarts] = useCarts();
 
   async function addToCarts(id) {
@@ -109,15 +107,6 @@ function Profile({
         };
       })
       .filter(({ dish }) => dish);
-    // const allData = [profileResp, offersResp, menuNormalize];
-    // const allDataAvailable = allData.every(i => Array.isArray(i) && i.length);
-    // if (!allDataAvailable) {
-    //   setWarningSnackbar(true);
-    // } else {
-    //   updateProfile(profileResp);
-    //   updateOffers(offersResp);
-    //   updatemenus(menuNormalize);
-    // }
     updateProfile(profileResp);
     updateOffers(offersResp);
     updatemenus(menuNormalize);
