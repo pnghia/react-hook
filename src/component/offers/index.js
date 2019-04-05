@@ -15,7 +15,7 @@ function offerList({ offers, addToCarts }) {
   return (
     <List>
       {map(
-        ({ storeName, description, price, picture, id }) => (
+        ({ description, price, picture, id }) => (
           <ListItem key={id} alignItems="flex-start" style={{ borderBottom: 1, borderBottomColor: '#f5f5f5', borderBottomStyle: 'solid' }}>
             <img
               style={{ width: 100, height: 100, borderRadius: 4 }}
@@ -24,12 +24,8 @@ function offerList({ offers, addToCarts }) {
             />
             <ListItemText
               primary={
-                <Typography component="span" color="textPrimary" style={{fontSize: 17, fontWeight: 'bold'}}>
-                  {storeName}
-                </Typography>}
-              secondary={
                 <React.Fragment>
-                  <Typography component="span" color="textPrimary">
+                  <Typography component="span" color="textPrimary" style={{fontSize: 17, fontWeight: 'bold'}}>
                     {description}
                   </Typography>
                   <Typography component="span" style={{fontWeight: 'bold'}}>

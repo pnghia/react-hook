@@ -37,7 +37,7 @@ const topSidebar = [
 const bottomSidebar = [
   {
     title: 'Setting',
-    route: 'setting',
+    route: '/setting',
     icon: <Notifications />
   }
 ]

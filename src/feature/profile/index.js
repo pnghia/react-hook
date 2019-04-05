@@ -11,18 +11,23 @@ import {
   Tab,
   Card,
   CardContent,
-  CardMedia
+  CardMedia,
+  Badge
 } from '@material-ui/core';
 
-import { Menu as MenuIcon, PermIdentity } from '@material-ui/icons';
+import {
+  Menu as MenuIcon,
+  PermIdentity,
+  ShoppingCart as ShopingCartIcon
+} from '@material-ui/icons';
 
-import { map, findIndex, propEq } from 'ramda';
+import { map, findIndex, propEq, reduce, addIndex } from 'ramda';
 
 import http from 'service/http';
 import Sidebar from 'component/drawer';
 import useCarts from 'component/cart/hook';
 import Offers from 'component/offers';
-import Header from 'component/header'
+import Header from 'component/header';
 import useLoading from '../loading/hook';
 import customStyle from './style';
 
@@ -36,12 +41,13 @@ function Profile({
 }) {
   const classes = useStyles();
   const [offers, updateOffers] = useState([]);
-  const [profile, updateProfile] = useState({address: {}});
+  const [profile, updateProfile] = useState({ address: {} });
   const [menus, updatemenus] = useState([]);
+  const [dishes, setDishes] = useState({});
   const [, withLoading] = useLoading(false);
   const [tabSelected, updateTabSelected] = useState(0);
   const [drawer, toggleDrawer] = useState(false);
-  const [carts, updateCarts] = useCarts();
+  const [carts, updateCarts, getCartsAmount] = useCarts();
 
   async function addToCarts(id) {
     const withId = propEq('id', id);
@@ -74,11 +80,27 @@ function Profile({
   const onToggleDrawer = status => () => {
     toggleDrawer(status);
   };
-
+  const normalizeDishesData = arrayMenu => {
+    const reduceWithIndex = addIndex(reduce);
+    return reduceWithIndex(
+      (acc, curr, index) => {
+        const {
+          dish: {
+            data: { data }
+          }
+        } = curr;
+        return { ...acc, [index]: data };
+      },
+      {},
+      arrayMenu
+    );
+  };
   const fetchData = async () => {
     const [
       {
-        data: { data: [profileResp] }
+        data: {
+          data: [profileResp]
+        }
       },
       {
         data: { data: offersResp }
@@ -90,7 +112,7 @@ function Profile({
       Promise.all([
         http.get({ path: `store/search?id=${profileId}` }),
         http.get({ path: `offer?storeId=${profileId}` }),
-        http.get({ path: `store/menu?storeId=${profileId}`})
+        http.get({ path: `store/menu?storeId=${profileId}` })
       ])
     );
     const tasks = map(
@@ -110,8 +132,8 @@ function Profile({
     updateProfile(profileResp);
     updateOffers(offersResp);
     updatemenus(menuNormalize);
+    setDishes(normalizeDishesData(menuNormalize));
   };
-
   useEffect(() => {
     fetchData();
   }, []);
@@ -139,21 +161,25 @@ function Profile({
           >
             <MenuIcon />
           </IconButton>
-          <Header 
-        string='Profile'
-        classes={classes}
-      />
+          <Header string="Profile" classes={classes} />
           <div>
-            <IconButton color="inherit">
+            <IconButton
+              color="inherit"
+              onClick={() => history.push('/setting')}
+            >
               <PermIdentity />
+            </IconButton>
+          </div>
+          <div>
+            <IconButton color="inherit" onClick={() => history.push('/cart')}>
+              <Badge badgeContent={getCartsAmount()} color="secondary">
+                <ShopingCartIcon />
+              </Badge>
             </IconButton>
           </div>
         </Toolbar>
       </AppBar>
-      <Card
-        className={classes.card}
-        style={{ marginTop: 56, borderRadius: 0 }}
-      >
+      <Card className={classes.card} style={{ marginTop: 56, borderRadius: 0 }}>
         <div className={classes.details}>
           <CardContent className={classes.content}>
             <Typography component="p" variant="title">
@@ -184,7 +210,12 @@ function Profile({
         ))}
       </Tabs>
       <Typography component="div">
-        <Offers offers={offers} addToCarts={addToCarts} />
+        {tabSelected === 0 && (
+          <Offers offers={offers} addToCarts={addToCarts} />
+        )}
+        {tabSelected !== 0 && (
+          <Offers offers={dishes[tabSelected - 1]} addToCarts={addToCarts} />
+        )}
       </Typography>
     </div>
   );
