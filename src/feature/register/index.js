@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { reduce } from 'ramda';
 import {
   Button,
@@ -8,7 +8,7 @@ import {
   FormControl,
   FormControlLabel,
   Checkbox,
-  Paper,
+  Paper
 } from '@material-ui/core';
 
 import { PersonAdd } from '@material-ui/icons';
@@ -17,53 +17,74 @@ import { useForm, useField } from 'react-final-form-hooks';
 import Joi from 'joi';
 import http from 'service/http';
 import { PropagateLoader } from 'react-spinners';
-import { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
+import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import AutoSuggestPlace from 'component/autoSuggestPlace';
-import Header from 'component/header'
+import Header from 'component/header';
+import Snackbar from 'component/snackbar';
 import useLoading from '../loading/hook';
 import styles from './style';
 
 function Register({ classes, history }) {
   const [loading, withLoading] = useLoading(false);
+  const [snackbarError, setSnackbarError] = useState(false);
+  const [snackbarErrorMessage, setSnackbarErrorMessage] = useState('');
 
   const addressToLatLng = async address => {
-    const [addresCode] = await geocodeByAddress(address)
-    return getLatLng(addresCode)
-  }
+    const [addresCode] = await geocodeByAddress(address);
+    return getLatLng(addresCode);
+  };
 
   const onSubmit = async ({ address, ...restPayload }) => {
-    const { lat, lng } = await addressToLatLng(address)
-    await withLoading(() =>
-      http.post({
-        path: 'user', payload: {
-          ...restPayload,
-          address: JSON.stringify({ formatted_address: address, location: { lat, lng } }),
-          roleId: 3
-        }
-      })
-    );
-    history.push('/register-success')
+    try {
+      const { lat, lng } = await addressToLatLng(address);
+      await withLoading(() =>
+        http.post({
+          path: 'user',
+          payload: {
+            ...restPayload,
+            address: JSON.stringify({
+              formatted_address: address,
+              location: { lat, lng }
+            }),
+            roleId: 3
+          }
+        })
+      );
+      history.push('/register-success');
+    } catch (error) {
+      setSnackbarErrorMessage(error.message);
+      setSnackbarError(true);
+    }
   };
   const errorMessageHandler = ([err]) => {
     if (err.type === 'any.required') {
-      return 'This field is required'
+      return 'This field is required';
     }
     if (err.type === 'any.empty') {
-      return 'This field is required'
+      return 'This field is required';
     }
     if (err.type === 'string.min') {
-      return `Value should have at least ${err.context.limit} characters!`
+      return `Value should have at least ${err.context.limit} characters!`;
     }
     if (err.type === 'string.max') {
-      return `Value should have at most ${err.context.limit} characters!`
+      return `Value should have at most ${err.context.limit} characters!`;
     }
-    return 'Unknow Error'
-  }
+    return 'Unknow Error';
+  };
   const schema = Joi.object().keys({
-    firstName: Joi.string().required().error(errorMessageHandler),
-    lastName: Joi.string().required().error(errorMessageHandler),
-    address: Joi.string().required().error(errorMessageHandler),
-    confirmPassword: Joi.any().required().valid(Joi.ref('password')).error(() => 'Password does not match'),
+    firstName: Joi.string()
+      .required()
+      .error(errorMessageHandler),
+    lastName: Joi.string()
+      .required()
+      .error(errorMessageHandler),
+    address: Joi.string()
+      .required()
+      .error(errorMessageHandler),
+    confirmPassword: Joi.any()
+      .required()
+      .valid(Joi.ref('password'))
+      .error(() => 'Password does not match'),
     password: Joi.string()
       .min(3)
       .max(30)
@@ -76,7 +97,9 @@ function Register({ classes, history }) {
       .required()
       .regex(/^ *\d[\d ]*$/)
       .error(errorMessageHandler),
-    terms: Joi.equal(true).error(() => 'You must accept the terms and conditions')
+    terms: Joi.equal(true).error(
+      () => 'You must accept the terms and conditions'
+    )
   });
 
   const validate = values => {
@@ -104,12 +127,12 @@ function Register({ classes, history }) {
   });
   const email = useField('email', form);
   const password = useField('password', form);
-  const confirmPassword = useField('confirmPassword', form)
-  const firstName = useField('firstName', form)
-  const lastName = useField('lastName', form)
-  const phone = useField('phone', form)
-  const address = useField('address', form)
-  const terms = useField('terms', form)
+  const confirmPassword = useField('confirmPassword', form);
+  const firstName = useField('firstName', form);
+  const lastName = useField('lastName', form);
+  const phone = useField('phone', form);
+  const address = useField('address', form);
+  const terms = useField('terms', form);
   return (
     <div className={classes.main}>
       <CssBaseline />
@@ -117,28 +140,28 @@ function Register({ classes, history }) {
         <Avatar className={classes.avatar}>
           <PersonAdd />
         </Avatar>
-        <Header 
-            string='Register'
-            classes={classes}
-          />
+        <Header string="Register" classes={classes} />
         <form onSubmit={handleSubmit} className={classes.form}>
           <FormControl margin="normal" required fullWidth>
             <TextField {...firstName.input} label="First Name" fullWidth />
-            {firstName.meta.touched && firstName.meta.error && <div className={classes.error}>{firstName.meta.error}</div>}
+            {firstName.meta.touched && firstName.meta.error && (
+              <div className={classes.error}>{firstName.meta.error}</div>
+            )}
           </FormControl>
           <FormControl margin="normal" required fullWidth>
             <TextField {...lastName.input} label="Last Name" fullWidth />
-            {lastName.meta.touched && lastName.meta.error && <div className={classes.error}>{lastName.meta.error}</div>}
+            {lastName.meta.touched && lastName.meta.error && (
+              <div className={classes.error}>{lastName.meta.error}</div>
+            )}
           </FormControl>
           <FormControl margin="normal" required fullWidth>
             <TextField {...phone.input} label="Phone number" fullWidth />
-            {phone.meta.touched && phone.meta.error && <div className={classes.error}>{phone.meta.error}</div>}
+            {phone.meta.touched && phone.meta.error && (
+              <div className={classes.error}>{phone.meta.error}</div>
+            )}
           </FormControl>
           <FormControl margin="normal" required fullWidth>
-            <AutoSuggestPlace
-              TextField={TextField}
-              {...address}
-            />
+            <AutoSuggestPlace TextField={TextField} {...address} />
             {address.meta.touched && address.meta.error && (
               <div className={classes.error}>{address.meta.error}</div>
             )}
@@ -150,13 +173,23 @@ function Register({ classes, history }) {
             )}
           </FormControl>
           <FormControl margin="normal" required fullWidth>
-            <TextField type="password" {...password.input} label="Password" fullWidth />
+            <TextField
+              type="password"
+              {...password.input}
+              label="Password"
+              fullWidth
+            />
             {password.meta.touched && password.meta.error && (
               <div className={classes.error}>{password.meta.error}</div>
             )}
           </FormControl>
           <FormControl margin="normal" required fullWidth>
-            <TextField type="password" {...confirmPassword.input} label="Confirm Password" fullWidth />
+            <TextField
+              type="password"
+              {...confirmPassword.input}
+              label="Confirm Password"
+              fullWidth
+            />
             {confirmPassword.meta.touched && confirmPassword.meta.error && (
               <div className={classes.error}>{confirmPassword.meta.error}</div>
             )}
@@ -165,7 +198,9 @@ function Register({ classes, history }) {
             checked={terms.input.value}
             control={<Checkbox color="primary" />}
             label="Terms & Policy"
-            onChange={() => terms.input.onChange({ target: { value: !terms.input.value } })}
+            onChange={() =>
+              terms.input.onChange({ target: { value: !terms.input.value } })
+            }
           />
           {terms.meta.touched && terms.meta.error && (
             <div className={classes.error}>{terms.meta.error}</div>
@@ -182,29 +217,34 @@ function Register({ classes, history }) {
               />
             </div>
           ) : (
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                disabled={submitting}
-                className={classes.submit}
-              >
-                Register Eater
-            </Button>
-            )}
             <Button
-                fullWidth
-                variant="outlined"
-                color="secondary"
-                className={classes.toLogin}
-                disabled={submitting}
-                onClick={() => history.push('/login')}
-              >
-                To Login Page
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              disabled={submitting}
+              className={classes.submit}
+            >
+              Register Eater
             </Button>
+          )}
+          <Button
+            fullWidth
+            variant="outlined"
+            color="secondary"
+            className={classes.toLogin}
+            disabled={submitting}
+            onClick={() => history.push('/login')}
+          >
+            To Login Page
+          </Button>
         </form>
       </Paper>
+      <Snackbar.error
+        isOpen={snackbarError}
+        handleClose={() => setSnackbarError(false)}
+        message={snackbarErrorMessage}
+      />
     </div>
   );
 }
