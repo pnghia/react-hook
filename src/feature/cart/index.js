@@ -119,7 +119,7 @@ function cart({ history }) {
         </Toolbar>
       </AppBar>
 
-      <List style={{ marginTop: 80 }}>
+      <List style={{ marginTop: 80, paddingBottom: 70 }}>
         {map(
           ({ storeName, description, price, picture, id, quantity }) => (
             <ListItem

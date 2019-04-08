@@ -18,6 +18,7 @@ import { Menu as MenuIcon } from '@material-ui/icons';
 import http from 'service/http';
 import Sidebar from 'component/drawer';
 import Header from 'component/header';
+import InfoPanel from 'component/infoPanel';
 import useLoading from '../loading/hook';
 import customStyle from './style';
 
@@ -80,26 +81,41 @@ function Profile({
         </AppBar>
         <TabContainer style={{ marginTop: 100 }}>
           <List>
-            {resList.map(({ name, address, menu, id}, index) => (
-              <ListItem key={index} alignItems="flex-start" onClick={() => history.push(`/profile/${id}`)}>
-                <ListItemAvatar>
-                  <Avatar
-                    alt="Remy Sharp"
-                    src={`https://carflatf.com/images/s_${menu}`}
+            {resList ? (
+              resList.map(({ name, address, menu, id }, index) => (
+                <ListItem
+                  key={index}
+                  alignItems="flex-start"
+                  onClick={() => history.push(`/profile/${id}`)}
+                >
+                  <ListItemAvatar>
+                    <Avatar
+                      alt="Remy Sharp"
+                      src={`https://carflatf.com/images/s_${menu}`}
+                    />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={name}
+                    secondary={
+                      <React.Fragment>
+                        <Typography component="span" color="textPrimary">
+                          {address ? address.formatted_address : 'fuckkkk'}
+                        </Typography>
+                      </React.Fragment>
+                    }
                   />
-                </ListItemAvatar>
-                <ListItemText
-                  primary={name}
-                  secondary={
-                    <React.Fragment>
-                      <Typography component="span" color="textPrimary">
-                        {address ? address.formatted_address : 'fuckkkk'}
-                      </Typography>
-                    </React.Fragment>
-                  }
-                />
-              </ListItem>
-            ))}
+                </ListItem>
+              ))
+            ) : (
+              <InfoPanel
+                ButtonText="Go Back"
+                onClick={() => history.push('/categories')}
+                variant="info"
+                title="Oops nothing here"
+                body="Please comback latter"
+                url="/categories"
+              />
+            )}
           </List>
         </TabContainer>
       </div>

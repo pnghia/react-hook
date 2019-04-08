@@ -107,7 +107,7 @@ function cart({ history }) {
           </div>
         </Grid>
       </Grid>
-      <List>
+      <List style={{ paddingBottom: 75 }} >
         { map(
             ({ storeName, description, price, picture, id }) => (
               <ListItem key={id} alignItems="flex-start" style={{ borderBottom: 1, borderBottomColor: '#f5f5f5', borderBottomStyle: 'solid' }}>
