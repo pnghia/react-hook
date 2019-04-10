@@ -5,13 +5,9 @@ import {
   ListItem,
   ListItemText,
   ListItemAvatar,
-  ListItemSecondaryAction,
   Avatar,
-  Typography,
-  IconButton
+  Typography
 } from '@material-ui/core'
-
-import { AddShoppingCart as AddShoppingCartIcon } from '@material-ui/icons'
 
 function restaurantList({ restaurants, history }) {
   return (
