@@ -187,7 +187,7 @@ function cart({ history }) {
             color="default"
             onClick={() => history.push('cart-review')}
           >
-            Payment
+            Order
           </Button>
         </Toolbar>
       </AppBar>
