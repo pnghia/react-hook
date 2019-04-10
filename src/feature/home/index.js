@@ -147,7 +147,7 @@ function home({ history }) {
       <TabContainer style={{marginTop: 100}}>
         { tabSelected === 0
           ? <Offers offers={offers} addToCarts={addToCarts} />
-          : <Restaurants restaurants={restaurants} />
+          : <Restaurants history={history} restaurants={restaurants} />
         }
       </TabContainer>
     </div>
