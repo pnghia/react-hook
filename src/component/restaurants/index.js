@@ -31,11 +31,6 @@ function restaurantList({ restaurants, history }) {
             </React.Fragment>
           }
         />
-        <ListItemSecondaryAction>
-          <IconButton aria-label="Comments">
-            <AddShoppingCartIcon />
-          </IconButton>
-        </ListItemSecondaryAction>
       </ListItem>))}
     </List>
   );
