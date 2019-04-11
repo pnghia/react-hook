@@ -186,7 +186,7 @@ function Profile({
               <span style={{ fontWeight: 'bold' }}>{name}</span>
             </Typography>
             <Typography variant="subtitle1" color="textSecondary">
-              {address.formatted_address}
+              {address ? address.formatted_address : ''}
             </Typography>
           </CardContent>
         </div>
