@@ -14,7 +14,7 @@ import numeral from 'numeral'
 function offerList({ offers, addToCarts }) {
   return (
     <List>
-      {map(
+      {offers.length ? map(
         ({ description, price, picture, id }) => (
           <ListItem key={id} alignItems="flex-start" style={{ borderBottom: 1, borderBottomColor: '#f5f5f5', borderBottomStyle: 'solid' }}>
             <img
@@ -45,7 +45,7 @@ function offerList({ offers, addToCarts }) {
           </ListItem>
         ),
         offers
-      )}
+      ) : null}
     </List>
   );
 }
