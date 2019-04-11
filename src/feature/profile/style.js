@@ -12,9 +12,6 @@ export default {
   tab: {
     flexGrow: 1,
   },
-  card: {
-    display: 'flex',
-  },
   details: {
     display: 'flex',
     flexDirection: 'column',
@@ -35,4 +32,7 @@ export default {
     height: 38,
     width: 38,
   },
+  chip:{
+    margin: '10px 0px'
+  }
 }

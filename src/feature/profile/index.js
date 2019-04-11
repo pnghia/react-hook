@@ -12,13 +12,14 @@ import {
   Card,
   CardContent,
   CardMedia,
-  Badge
+  Badge,
+  Chip
 } from '@material-ui/core';
 
 import {
   Menu as MenuIcon,
   PermIdentity,
-  ShoppingCart as ShopingCartIcon
+  ShoppingCart as ShopingCartIcon,
 } from '@material-ui/icons';
 
 import { map, findIndex, propEq, reduce, addIndex } from 'ramda';
@@ -32,7 +33,7 @@ import useLoading from '../loading/hook';
 import customStyle from './style';
 
 const useStyles = makeStyles(customStyle);
-
+const CHIP_COLORS = ['#7ecb20', '#007DFE', '#ff79b0'];
 function Profile({
   history,
   match: {
@@ -138,7 +139,7 @@ function Profile({
     fetchData();
   }, []);
 
-  const { name, address, menu } = profile;
+  const { name, address, menu, category = [] } = profile;
   return (
     <div className={classes.root}>
       <Drawer open={drawer} onClose={onToggleDrawer(false)}>
@@ -180,22 +181,30 @@ function Profile({
         </Toolbar>
       </AppBar>
       <Card className={classes.card} style={{ marginTop: 56, borderRadius: 0 }}>
-        <div className={classes.details}>
-          <CardContent className={classes.content}>
-            <Typography component="p" variant="title">
-              <span style={{ fontWeight: 'bold' }}>{name}</span>
-            </Typography>
-            <Typography variant="subtitle1" color="textSecondary">
-              {address ? address.formatted_address : ''}
-            </Typography>
-          </CardContent>
-        </div>
         <CardMedia
-          className={classes.cover}
-          style={{ width: 160 }}
+          component="img"
+          alt="Contemplative Reptile"
+          className={classes.media}
+          height="200"
           image={`http://carflatf.com:7070/images/m_${menu}`}
-          title="Live from space album cover"
+          title="Contemplative Reptile"
         />
+        <CardContent className={classes.content}>
+          <Typography component="p" variant="title">
+            <span style={{ fontWeight: 'bold' }}>{name}</span>
+          </Typography>
+          {category.map(item => (
+            <Chip
+              key={item.id}
+              variant="outlined"
+              label={item.name}
+              className={classes.chip}
+            />
+          ))}
+          <Typography variant="subtitle1" color="textSecondary">
+            {address ? address.formatted_address : ''}
+          </Typography>
+        </CardContent>
       </Card>
       <Tabs
         value={tabSelected}
