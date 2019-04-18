@@ -8,10 +8,11 @@ import Profile from 'feature/profile'
 import Register from 'feature/register'
 import RegistrationSuccessfully from 'feature/registrationSuccessfully'
 import Category from 'feature/category';
-
+import Payment from 'feature/stripe'
 
 export {
     Cart,
+    Payment,
     CartReview,
     Setting,
     Categories,

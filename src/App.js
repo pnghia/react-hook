@@ -16,7 +16,8 @@ import {
   Register,
   Login,
   Setting,
-  RegistrationSuccessfully
+  RegistrationSuccessfully,
+  Payment
 } from 'feature'
 
 import http from 'service/http'
@@ -42,14 +43,15 @@ function AuthExample() {
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route path="/register-success"  component={RegistrationSuccessfully} />
-          <PrivateRoute path="/cart" component={Cart} />
-          <PrivateRoute path="/cart-review" component={CartReview} />
-          <PrivateRoute path="/categories" component={Categories} />
-          <PrivateRoute path="/home" component={Home} />
+          <Route path="/cart" component={Cart} />
+          <Route path="/cart-review" component={CartReview} />
+          <Route path="/categories" component={Categories} />
+          <Route path="/home" component={Home} />
           <PrivateRoute exact path="/" component={Home} />
-          <PrivateRoute path="/category/:categoryId" component={Category} />
-          <PrivateRoute path="/profile/:profileId" component={Profile} />
+          <Route path="/category/:categoryId" component={Category} />
+          <Route path="/profile/:profileId" component={Profile} />
           <PrivateRoute path="/setting" component={Setting} />
+          <PrivateRoute path="/payment" component={Payment} />
         </div>
       </Router>
     </MuiThemeProvider>
