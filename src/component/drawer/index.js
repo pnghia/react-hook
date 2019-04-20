@@ -65,7 +65,7 @@ function sideList({ history }) {
             <ListItemText primary={title} />
           </ListItem>
         ), bottomSidebar)}
-        <ListItem button onClick={() => { history.push('/'); store.clearAll()}}>
+        <ListItem button onClick={() => { history.push('/'); store.remove('user')}}>
           <ListItemIcon>
             <SentimentDissatisfied />
           </ListItemIcon>

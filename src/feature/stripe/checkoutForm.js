@@ -1,31 +1,44 @@
 import {
   Button
 } from '@material-ui/core'
-import React, {Component} from 'react';
+import http from 'service/http'
+import useCarts from 'component/cart/hook'
+import React from 'react';
 import {CardElement, injectStripe} from 'react-stripe-elements';
+import store from 'store'
 
-class CheckoutForm extends Component {
-  constructor(props) {
-    super(props);
-    this.submit = this.submit.bind(this);
-  }
+const AUTH = 'user'
 
-  async submit() {
-    // eslint-disable-next-line react/destructuring-assignment
-    const {token} = await this.props.stripe.createToken({amount: 500});
-    console.log(token);
+function CheckoutForm(props) {
+  const [carts, , , , waiting] = useCarts()
+  const { id: userId } = store.get(AUTH)
+  const submit = async () => {
+    try {
+      const { stripe: { createToken } } = props
+      const { token } = await createToken();
+      const orderDetails = carts.map(({ dishId, quantity, price, discount, comment}) => ({
+        dishId, quantity, price, discount, comment
+      }))
+      http.post({path: 'order', payload: {
+        userId,
+        storeId: 3,
+        pickupTime: waiting,
+        orderDate: Date(),
+        orderDetails,
+        paymentInfo: token.id
+      }})
+    } catch (error) {
+      throw error
+    }
   }
-
-  render() {
-    return (
-      <div className="checkout">
-        <CardElement />
-        <Button style={{marginTop: 15}} variant="contained"
-          color="primary"
-          onClick={this.submit}>Send</Button>
-      </div>
-    );
-  }
+  return (
+    <div className="checkout">
+      <CardElement />
+      <Button style={{marginTop: 15}} variant="contained"
+        color="primary"
+        onClick={submit}>Send</Button>
+    </div>
+  )
 }
 
 export default injectStripe(CheckoutForm);

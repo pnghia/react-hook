@@ -36,7 +36,6 @@ const useStyles = makeStyles(customStyle);
 
 function cart({ history }) {
   const classes = useStyles()
-  // const [auth] = useAuth(false)
   const [carts, , getCartsAmount, priceCarts, waiting] = useCarts()
   const [drawer, toggleDrawer] = useState(false)
 
@@ -144,8 +143,8 @@ function cart({ history }) {
       </List>
       <AppBar position="fixed" style={{bottom: 0, top: 'auto'}} color="default">
         <Toolbar className={classes.toolbar}>
-          <Button variant="outlined" color="default">
-            Add Payment
+          <Button variant="outlined" color="default" onClick={() => history.push('payment')}>
+            Payment
           </Button>
           <Button variant="outlined" color="default">
             Confirm

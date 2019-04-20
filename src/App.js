@@ -59,26 +59,30 @@ function AuthExample() {
 }
 
 function PrivateRoute({ component: Component, ...rest }) {
-  const token = store.get('token')
-  http.setJwtToken(token)
+  try {
+    const token = store.get('token')
+    http.setJwtToken(token)
 
-  return (
-    <Route
-      {...rest}
-      render={props =>
-        token ? (
-          <Component {...props} />
-        ) : (
-            <Redirect
-              to={{
-                pathname: "/login",
-                state: { from: props.location }
-              }}
-            />
-          )
-      }
-    />
-  );
+    return (
+      <Route
+        {...rest}
+        render={props =>
+          token ? (
+            <Component {...props} />
+          ) : (
+              <Redirect
+                to={{
+                  pathname: "/login",
+                  state: { from: props.location }
+                }}
+              />
+            )
+        }
+      />
+    );
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 export default AuthExample
