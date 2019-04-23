@@ -21,12 +21,13 @@ function CheckoutForm(props) {
       }))
       http.post({path: 'order', payload: {
         userId,
-        storeId: 3,
+        storeId: 50,
         pickupTime: waiting,
         orderDate: Date(),
         orderDetails,
         paymentInfo: token.id
       }})
+      props.history.push('/home')
     } catch (error) {
       throw error
     }
