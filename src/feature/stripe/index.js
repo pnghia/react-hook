@@ -54,7 +54,7 @@ function home({ history }) {
           <div/>
         </Toolbar>
       </AppBar>
-      <StripeProvider apiKey="pk_RXwtgk4Z5VR82S94vtwmam6P8qMXQ">
+      <StripeProvider apiKey="pk_test_iTfXEX5tUaFTtGPAzzFfyRl7">
         <div className="example">
           <h1>Stripe Payment Gateway</h1>
           <Elements>
