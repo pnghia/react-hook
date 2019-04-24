@@ -47,7 +47,7 @@ function AuthExample() {
           <Route path="/cart-review" component={CartReview} />
           <Route path="/categories" component={Categories} />
           <Route path="/home" component={Home} />
-          <PrivateRoute exact path="/" component={Home} />
+          <Route exact path="/" component={Home} />
           <Route path="/category/:categoryId" component={Category} />
           <Route path="/profile/:profileId" component={Profile} />
           <PrivateRoute path="/setting" component={Setting} />

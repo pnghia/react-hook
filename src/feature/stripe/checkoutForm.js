@@ -6,11 +6,21 @@ import useCarts from 'component/cart/hook'
 import React from 'react';
 import {CardElement, injectStripe} from 'react-stripe-elements';
 import store from 'store'
+import useDialog from '../dialog/hook'
 
 const AUTH = 'user'
 
 function CheckoutForm(props) {
-  const [carts, , , , waiting] = useCarts()
+  const [carts, updateCarts, , , waiting] = useCarts()
+  const [ErrorDialog, showDialogErrorWithMessage] = useDialog({
+    title: 'Payment Error',
+    btnLabel: 'Got it',
+    type: 'error'
+  })
+  const [Dialog, showDialogWithMessage] = useDialog({
+    title: 'Payment',
+    btnLabel: 'Got it',
+  })
   const { id: userId } = store.get(AUTH)
   const submit = async () => {
     try {
@@ -19,7 +29,7 @@ function CheckoutForm(props) {
       const orderDetails = carts.map(({ dishId, quantity, price, discount, comment}) => ({
         dishId, quantity, price, discount, comment
       }))
-      http.post({path: 'order', payload: {
+      await http.post({path: 'order', payload: {
         userId,
         storeId: 50,
         pickupTime: waiting,
@@ -27,13 +37,19 @@ function CheckoutForm(props) {
         orderDetails,
         paymentInfo: token.id
       }})
-      props.history.push('/home')
+      showDialogWithMessage('payment successful')
+      updateCarts([])
+      setTimeout(() => {
+        props.history.push('/home')
+      }, 2000); 
     } catch (error) {
-      throw error
+      showDialogErrorWithMessage(error.message)
     }
   }
   return (
     <div className="checkout">
+      <ErrorDialog />
+      <Dialog />
       <CardElement />
       <Button style={{marginTop: 15}} variant="contained"
         color="primary"

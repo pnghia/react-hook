@@ -58,7 +58,7 @@ function home({ history }) {
         <div className="example">
           <h1>Stripe Payment Gateway</h1>
           <Elements>
-            <CheckoutForm/>
+            <CheckoutForm history={history}/>
           </Elements>
         </div>
       </StripeProvider>
