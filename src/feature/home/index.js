@@ -31,7 +31,7 @@ import customStyle from './style'
 
 const useStyles = makeStyles(customStyle);
 
-function home({ history }) {
+function Home({ history }) {
   const classes = useStyles();
   const [offers, updateOffers] = useState([]);
   const [restaurants, updateRestaurants] = useState([]);
@@ -154,4 +154,4 @@ function home({ history }) {
   );
 }
 
-export default home;
+export default Home;

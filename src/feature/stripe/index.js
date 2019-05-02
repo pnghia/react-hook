@@ -17,7 +17,7 @@ import './style.css'
 
 const useStyles = makeStyles(customStyle);
 
-function home({ history }) {
+function Home({ history }) {
   const classes = useStyles();
   const [drawer, toggleDrawer] = useState(false);
 
@@ -66,4 +66,4 @@ function home({ history }) {
   );
 }
 
-export default home;
+export default Home;

@@ -34,7 +34,7 @@ import customStyle from './style'
 
 const useStyles = makeStyles(customStyle);
 
-function cart({ history }) {
+function Cart({ history }) {
   const classes = useStyles()
   const [carts, , getCartsAmount, priceCarts, waiting] = useCarts()
   const [drawer, toggleDrawer] = useState(false)
@@ -155,4 +155,4 @@ function cart({ history }) {
   );
 }
 
-export default cart;
+export default Cart;

@@ -22,4 +22,8 @@ export default {
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  commentBtn: {
+    left: 130,
+    bottom: 11
+  }
 }
