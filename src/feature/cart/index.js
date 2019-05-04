@@ -20,9 +20,9 @@ import {
   Add as AddIcon,
   Remove as RemoveIcon
 } from '@material-ui/icons';
-
+import store from 'store';
 import numeral from 'numeral';
-import { propEq, map, findIndex } from 'ramda';
+import { propEq, map, findIndex, filter } from 'ramda';
 import useCarts from 'component/cart/hook';
 import Sidebar from 'component/drawer';
 import Header from 'component/header';
@@ -39,6 +39,7 @@ function Cart({ history }) {
   const [carts, updateCarts, getCartsAmount, priceCarts] = useCarts();
   const [drawer, toggleDrawer] = useState(false);
   const [commentDialog, setCommentDialog] = useState(false);
+  const [commentId, setCommentId] = useState();
   async function addToCarts(id) {
     const withId = propEq('id', id);
     const findIndexInCards = findIndex(withId);
@@ -84,6 +85,25 @@ function Cart({ history }) {
     toggleDrawer(status);
   };
 
+  const handleSubmitCmt = commendId => ({ comment }) => {
+    const cartsStore = store.get('CARTS');
+    const addedComment = map(
+      ({ dishId, ...rest }) =>
+        commendId === dishId
+          ? { ...rest, dishId, comment }
+          : { ...rest, dishId },
+      cartsStore
+    );
+    store.set('CARTS', addedComment);
+  };
+  const getCmtFormStore = commendId => {
+    const cartsStore = store.get('CARTS');
+    const [{ comment } = {}] = filter(
+      ({ dishId }) => commendId === dishId,
+      cartsStore
+    );
+    return comment;
+  };
   return (
     <div className={classes.root}>
       <Drawer open={drawer} onClose={onToggleDrawer(false)}>
@@ -119,7 +139,15 @@ function Cart({ history }) {
 
       <List style={{ marginTop: 80, paddingBottom: 70 }}>
         {map(
-          ({ storeName, description, price, picture, id, quantity }) => (
+          ({
+            storeName,
+            description,
+            price,
+            picture,
+            id,
+            quantity,
+            dishId
+          }) => (
             <ListItem
               key={id}
               alignItems="flex-start"
@@ -146,7 +174,10 @@ function Cart({ history }) {
                       variant="outlined"
                       style={{ position: 'absolute' }}
                       className={classes.commentBtn}
-                      onClick={() => setCommentDialog(true)}
+                      onClick={() => {
+                        setCommentId(dishId);
+                        setCommentDialog(true);
+                      }}
                     >
                       Comment
                     </Button>
@@ -179,6 +210,13 @@ function Cart({ history }) {
           carts
         )}
       </List>
+      <Comment
+        open={commentDialog}
+        handleClose={() => setCommentDialog(false)}
+        onSubmit={handleSubmitCmt(commentId)}
+        comment={getCmtFormStore(commentId)}
+        id={commentId}
+      />
       <AppBar
         position="fixed"
         style={{ bottom: 0, top: 'auto' }}
@@ -197,10 +235,6 @@ function Cart({ history }) {
           </Button>
         </Toolbar>
       </AppBar>
-      <Comment
-        open={commentDialog}
-        handleClose={() => setCommentDialog(false)}
-      />
     </div>
   );
 }
